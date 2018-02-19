@@ -1,0 +1,4 @@
+Resnet SD:
+https://github.com/preddy5/Residual-Learning-and-Stochastic-Depth
+Paper SD:
+https://arxiv.org/pdf/1603.09382.pdf

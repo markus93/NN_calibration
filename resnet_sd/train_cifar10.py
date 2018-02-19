@@ -30,7 +30,7 @@ from keras.layers import (
     Lambda
 )
 from keras.layers.convolutional import (
-    Convolution2D,
+    Conv2D,
     MaxPooling2D,
     AveragePooling2D
 )
@@ -54,9 +54,8 @@ def _shortcut(input, residual):
 
     shortcut = input
     if stride_width > 1 or stride_height > 1 or not equal_channels:
-        shortcut = Convolution2D(nb_filter=residual._keras_shape[1], nb_row=1, nb_col=1,
-                                 subsample=(stride_width, stride_height),
-                                 init="he_normal", border_mode="valid", W_regularizer=l2(weight_decay),
+        shortcut = Conv2D(filters=residual._keras_shape[1], kernel_size=(1, 1), strides=(stride_width, stride_height),
+                         kernel_initializer="he_normal", padding="valid",kernel_regularizer=l2(weight_decay),
                                  data_format="channels_first")(input)
         shortcut = Activation("relu")(shortcut)
 
@@ -174,8 +173,8 @@ if __name__ == '__main__':
     gates=collections.OrderedDict()
     model = resnet(nr_classes=nb_classes)
     set_decay_rate()
-    model.compile(optimizer="sgd", loss="categorical_crossentropy",metrics=["accuracy"])  
-    # EDIT: Changed rsmdrop to SGD? Shouldn't matter too much?
+    model.compile(optimizer="rmsprop", loss="categorical_crossentropy",metrics=["accuracy"])  
+    # EDIT: Changed rmsprop to SGD? Shouldn't matter too much?
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
     model_path = os.path.join(current_dir, "resnet_110.png")
