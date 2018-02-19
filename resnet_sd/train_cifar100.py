@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Model
 from keras.optimizers import SGD
 import keras.backend as K
-from keras.datasets import cifar10
+from keras.datasets import cifar100
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 from keras.regularizers import l2
@@ -131,14 +131,14 @@ if __name__ == '__main__':
     img_channels = 3
     nb_epochs = 400
     batch_size = 300
-    nb_classes = 10
+    nb_classes = 100 # Cifar-100
     pL = 0.5
     weight_decay = 1e-4
     seed = 333
 
 
     # data
-    (X_train, Y_train), (X_test, y_test) = cifar10.load_data()
+    (X_train, Y_train), (X_test, y_test) = cifar100.load_data()
     X_train = X_train.astype('float32')
     X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
     X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
@@ -191,7 +191,7 @@ if __name__ == '__main__':
                     validation_data = (x_val, y_val),
                     callbacks=[Gates_Callback(), LearningRateScheduler(scheduler)])
 
-    model.save_weights('model_weight_ep400_110SD_cifar_10.hdf5')
+    model.save_weights('model_weight_ep400_110SD_cifar_100.hdf5')
     
 
     print("Get test accuracy:")
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
     
     print("Pickle models history")
-    with open('hist_110SD_cifar10.p', 'wb') as f:
+    with open('hist_110SD_cifar100.p', 'wb') as f:
         pickle.dump(hist.history, f)
     
     
