@@ -6,7 +6,7 @@ import sklearn.metrics as metrics
 import wide_residual_network as wrn
 from keras.datasets import cifar100
 import keras.callbacks as callbacks
-import keras.utils.np_utils as kutils
+from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
 from sklearn.model_selection import train_test_split
@@ -19,13 +19,14 @@ batch_size = 100
 nb_epoch = 125
 img_rows, img_cols = 32, 32
 nb_classes = 100
+seed = 333
 
 # Add here data loading
 # data
 (X_train, Y_train), (X_test, y_test) = cifar100.load_data()
 X_train = X_train.astype('float32')
-X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
-X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
+#X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
+#X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
 
 
 # Data splitting (get additional 5k validation set)
@@ -69,7 +70,7 @@ print("Finished compiling")
 #model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
 
-hist = model.fit_generator(generator.flow(X_train45, Y_train45, batch_size=batch_size), steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
+hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size), steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
                    callbacks=[callbacks.ModelCheckpoint("WRN_16_8_Weights_cifar100.h5",
                                                         monitor="val_acc",
                                                         save_best_only=True,
@@ -82,7 +83,7 @@ model.save_weights('model_weight_ep125_wide16_8_cifar_100.hdf5')
 
 yPreds = model.predict(X_test)
 yPred = np.argmax(yPreds, axis=1)
-yPred = kutils.to_categorical(yPred)
+yPred = np_utils.to_categorical(yPred)
 yTrue = y_test
 
 accuracy = metrics.accuracy_score(yTrue, yPred) * 100
