@@ -25,6 +25,7 @@ seed = 333
 # data
 (X_train, Y_train), (X_test, y_test) = cifar100.load_data()
 X_train = X_train.astype('float32')
+X_test = X_test.astype('float32')
 #X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
 #X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
 

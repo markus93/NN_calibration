@@ -40,10 +40,10 @@ def bn_relu_conv(input, nb_filter, nb_row, nb_col, W_regularizer, subsample=(1, 
 
 
 # Builds a residual block with repeating bottleneck blocks.
-def residual_block(input, block_function, nb_filters, repetations, stoch_depth=True, is_first_layer=False, subsample=False):
+def residual_block(input, block_function, nb_filters, repetations, is_first_layer=False, subsample=False):
     for i in range(repetations):
         init_subsample = (1, 1)
         if i == 0 and (is_first_layer or subsample):
             init_subsample = (2, 2)
-        input = block_function(input, nb_filters=nb_filters, init_subsample=init_subsample, stoch_depth=stoch_depth)
+        input = block_function(input, nb_filters=nb_filters, init_subsample=init_subsample)
     return input
