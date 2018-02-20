@@ -34,10 +34,9 @@ X_train = X_train.astype('float32')
 X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
 img_mean = X_train45.mean(axis=0)  # per-pixel mean
-img_std = X_train45.std(axis=0)  # To normilize the interval (-1 to 1)
-X_train45 = (X_train45-img_mean)/img_std
-x_val = (x_val-img_mean)/img_std
-X_test = (X_test-img_mean)/img_std
+X_train45 = X_train45-img_mean
+x_val = x_val-img_mean
+X_test = X_test-img_mean
 
 
 img_gen = ImageDataGenerator(
@@ -45,7 +44,7 @@ img_gen = ImageDataGenerator(
     width_shift_range=0.125,  # 0.125*32 = 4 so max padding of 4 pixels, as described in paper.
     height_shift_range=0.125,
     fill_mode="constant",
-    cval = 255
+    cval = 0
 )
 
 img_gen.fit(X_train45)
@@ -59,7 +58,7 @@ init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 # For WRN-16-8 put N = 2, k = 8
 # For WRN-28-10 put N = 4, k = 10
 # For WRN-40-4 put N = 6, k = 4
-model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2, k=8, dropout=0.00)
+model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2, k=4, dropout=0.00)
 
 model.summary()
 #plot_model(model, "WRN-16-8.png", show_shapes=False)
@@ -70,15 +69,16 @@ print("Finished compiling")
 #model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
 
-hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size), steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
-                   callbacks=[callbacks.ModelCheckpoint("WRN_16_8_Weights_cifar100.h5",
+hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size, shuffle=True),
+                   steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
+                   callbacks=[callbacks.ModelCheckpoint("WRN_16_4_Weights_cifar100.h5",
                                                         monitor="val_acc",
                                                         save_best_only=True,
                                                         verbose=1)],
                    validation_data=(x_val, y_val),
                    validation_steps=x_val.shape[0] // batch_size,)
                    
-model.save_weights('model_weight_ep125_wide16_8_cifar_100.hdf5')
+model.save_weights('model_weight_ep125_wide16_4_cifar_100.hdf5')
 
 
 yPreds = model.predict(X_test)
@@ -96,5 +96,5 @@ loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
 print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
 print("Pickle models history")
-with open('hist_wide32_cifar100.p', 'wb') as f:
+with open('hist_wide16_4_cifar100.p', 'wb') as f:
     pickle.dump(hist.history, f)

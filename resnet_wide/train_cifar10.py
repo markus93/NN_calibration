@@ -33,19 +33,28 @@ X_train = X_train.astype('float32')
 # Sklearn to split
 X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
+#For image preprocessing we follow the methodology of [11] and [7], performing
+# global contrast normalization and ZCA whitening.
+
+
+#Global contrast normalization: substract by mean and devide by std. deviation 
+#(according to http://ai.stanford.edu/~ang/papers/nipsdlufl10-AnalysisSingleLayerUnsupervisedFeatureLearning.pdf 3.1.1)
+
 img_mean = X_train45.mean(axis=0)  # per-pixel mean
-img_std = X_train45.std(axis=0)  # To normilize the interval (-1 to 1)
+img_std = X_train45.std(axis=0)
 X_train45 = (X_train45-img_mean)/img_std
 x_val = (x_val-img_mean)/img_std
 X_test = (X_test-img_mean)/img_std
 
 
+#Paper (https://arxiv.org/pdf/1605.07146v1.pdf): For data augmentation we do horizontal
+#flips and take random crops from image padded by 4 pixels on each side, filling missing
+#pixels with reflections of original image
+
 img_gen = ImageDataGenerator(
     horizontal_flip=True,
     width_shift_range=0.125,  # 0.125*32 = 4 so max padding of 4 pixels, as described in paper.
-    height_shift_range=0.125,
-    fill_mode="constant",
-    cval = 255
+    height_shift_range=0.125
 )
 
 img_gen.fit(X_train45)
@@ -59,8 +68,8 @@ init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 # For WRN-16-8 put N = 2, k = 8
 # For WRN-28-10 put N = 4, k = 10
 # For WRN-40-4 put N = 6, k = 4
-model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2, k=8, dropout=0.00)
-
+model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2, k=8, dropout=0.0)
+# Dropout?
 model.summary()
 #plot_model(model, "WRN-16-8.png", show_shapes=False)
 
@@ -70,7 +79,8 @@ print("Finished compiling")
 #model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
 
-hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size), steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
+hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size, shuffle=True),
+                   steps_per_epoch=len(X_train45) // batch_size, epochs=nb_epoch,
                    callbacks=[callbacks.ModelCheckpoint("WRN_16_8_Weights_cifar10.h5",
                                                         monitor="val_acc",
                                                         save_best_only=True,
@@ -96,5 +106,5 @@ loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
 print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
 print("Pickle models history")
-with open('hist_wide32_cifar10.p', 'wb') as f:
+with open('hist_wide16_8_cifar10.p', 'wb') as f:
     pickle.dump(hist.history, f)

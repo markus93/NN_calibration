@@ -148,10 +148,9 @@ if __name__ == '__main__':
     X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
     img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    img_std = X_train45.std(axis=0)  # To normilize the interval (-1 to 1)
-    X_train45 = (X_train45-img_mean)/img_std
-    x_val = (x_val-img_mean)/img_std
-    X_test = (X_test-img_mean)/img_std
+    X_train45 = X_train45-img_mean
+    x_val = x_val-img_mean
+    X_test = X_test-img_mean
 
 
     img_gen = ImageDataGenerator(
@@ -160,7 +159,7 @@ if __name__ == '__main__':
         width_shift_range=0.125,  # 0.125*32 = 4 so max padding of 4 pixels, as described in paper.
         height_shift_range=0.125,
         fill_mode="constant",
-        cval = 255
+        cval = 0
     )
 
     img_gen.fit(X_train45)
