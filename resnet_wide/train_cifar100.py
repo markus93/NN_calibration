@@ -1,3 +1,5 @@
+# Used https://github.com/titu1994/Wide-Residual-Networks as base
+
 import numpy as np
 import sklearn.metrics as metrics
 
@@ -7,6 +9,8 @@ import keras.callbacks as callbacks
 import keras.utils.np_utils as kutils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
+from sklearn.model_selection import train_test_split
+
 
 from keras import backend as K
 import pickle
@@ -85,6 +89,10 @@ accuracy = metrics.accuracy_score(yTrue, yPred) * 100
 error = 100 - accuracy
 print("Accuracy : ", accuracy)
 print("Error : ", error)
+
+print("Get test accuracy:")
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
 print("Pickle models history")
 with open('hist_wide32_cifar100.p', 'wb') as f:
