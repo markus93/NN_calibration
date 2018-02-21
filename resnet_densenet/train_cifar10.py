@@ -47,7 +47,7 @@ print("Model created")
 
 model.summary()
 sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # dampening = 0.9?
-model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=["accuracy"])
+model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
 print("Finished compiling")
 print("Building model...")
 
@@ -75,7 +75,7 @@ Y_train45 = np_utils.to_categorical(Y_train45, nb_classes)  # 1-hot vector
 y_val = np_utils.to_categorical(y_val, nb_classes)
 Y_test = np_utils.to_categorical(Y_test, nb_classes)
 
-img_gen.fit(X_train, seed=seed)
+img_gen.fit(X_train45, seed=seed)
 
 callbacks = [LearningRateScheduler(scheduler)]
 
