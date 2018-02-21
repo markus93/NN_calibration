@@ -124,12 +124,12 @@ class Gates_Callback(Callback):
 if __name__ == '__main__':
 
     # constants
-    learning_rate = 0.01
+    learning_rate = 0.1
     momentum = 0.9
     img_rows, img_cols = 32, 32
     img_channels = 3
-    nb_epochs = 400
-    batch_size = 300
+    nb_epochs = 500
+    batch_size = 128
     nb_classes = 10
     pL = 0.5
     weight_decay = 1e-4
@@ -147,9 +147,10 @@ if __name__ == '__main__':
     X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
     img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    X_train45 = X_train45-img_mean
-    x_val = x_val-img_mean
-    X_test = X_test-img_mean
+    img_std = X_train45.std(axis=0)
+    X_train45 = (X_train45-img_mean)/img_std
+    x_val = (x_val-img_mean)/img_std
+    X_test = (X_test-img_mean)/img_std
 
 
     img_gen = ImageDataGenerator(
@@ -171,7 +172,8 @@ if __name__ == '__main__':
     gates=collections.OrderedDict()
     model = resnet(nr_classes=nb_classes)
     set_decay_rate()
-    model.compile(optimizer="rmsprop", loss="categorical_crossentropy",metrics=["accuracy"])  
+    sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)
+    model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
     # EDIT: Changed rmsprop to SGD? Shouldn't matter too much?
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -182,13 +184,13 @@ if __name__ == '__main__':
         print(K.get_value(gates[i][1]), gates[i][0],i)
 
     hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size, shuffle=True),
-                    steps_per_epoch=len(X_train45) // batch_size,  # Change this - Keras 2.
+                    steps_per_epoch=len(X_train45) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,
                     validation_data = (x_val, y_val),
                     callbacks=[Gates_Callback(), LearningRateScheduler(scheduler)])
 
-    model.save_weights('model_weight_ep400_110SD_cifar_10.hdf5')
+    model.save_weights('model_weight_ep500_110SD_cifar_10.hdf5')
     
 
     print("Get test accuracy:")

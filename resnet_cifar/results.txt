@@ -1,0 +1,3 @@
+50k cifar-10 v2: train acc: 0.997; test acc: 0.9396
+45k cifar-10 v2: train_acc: 0.9999, val_acc: 0.9470; test_acc: 0.9353
+45k cifar-10:  train acc: 0.9992; val_acc: 0.9364; test_acc: 0.923900 
