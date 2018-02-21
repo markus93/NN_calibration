@@ -10,6 +10,7 @@ from keras.callbacks import LearningRateScheduler, TensorBoard, ModelCheckpoint
 from keras.models import Model
 from keras import optimizers, regularizers
 
+
 stack_n            = 18
 num_classes        = 10
 img_rows, img_cols = 32, 32

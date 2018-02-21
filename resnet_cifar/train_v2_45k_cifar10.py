@@ -10,6 +10,7 @@ from keras.callbacks import LearningRateScheduler, TensorBoard, ModelCheckpoint
 from keras.models import Model
 from keras import optimizers, regularizers
 from sklearn.model_selection import train_test_split
+import pickle
 
 
 stack_n            = 18            
@@ -18,7 +19,7 @@ img_rows, img_cols = 32, 32
 img_channels       = 3
 batch_size         = 128
 epochs             = 200
-iterations         = 50000 // batch_size
+iterations         = 45000 // batch_size
 weight_decay       = 0.0001
 mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm
 std  = [62.9932, 62.0887, 66.7048]
@@ -124,9 +125,7 @@ if __name__ == '__main__':
     resnet.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
     # set callback
-    cbks = [TensorBoard(log_dir='./resnet_110_v2/', histogram_freq=0),
-            LearningRateScheduler(scheduler),
-            ModelCheckpoint('./checkpoint_110_v2-{epoch}.h5', save_best_only=False, mode='auto', period=10)]
+    cbks = [LearningRateScheduler(scheduler)]
 
     # set data augmentation
     print('Using real-time data augmentation.')

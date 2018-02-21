@@ -16,6 +16,7 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 from keras.regularizers import l2
+from keras import optimizers
 from keras.utils.vis_utils import plot_model
 from keras.callbacks import (
     Callback,
@@ -111,11 +112,14 @@ def set_decay_rate():
 
 # Callbacks for updating gates and learning rate
 def scheduler(epoch):
-    if epoch < nb_epochs/2:
-        return learning_rate
+    if epoch < 2:
+        print("Learning rate:", learning_rate*0.1, "epoch:", epoch)
+        return learning_rate*0.1  # First epoch learning rate 0.01
+    elif epoch < nb_epochs/2:
+        return learning_rate  # 0.1 2-100 epochs
     elif epoch < nb_epochs*3/4:
-        return learning_rate*0.1
-    return learning_rate*0.01
+        return learning_rate*0.1  # 0.01 100-150 epoch
+    return learning_rate*0.01  # 0.001 150-200 epochs
 
 
 class Gates_Callback(Callback):
@@ -134,21 +138,21 @@ class Gates_Callback(Callback):
 if __name__ == '__main__':
 
     # constants
-    learning_rate = 0.01
+    learning_rate = 0.1
     momentum = 0.9
     img_rows, img_cols = 32, 32
     img_channels = 3
-    nb_epochs = 400
-    batch_size = 300
+    nb_epochs = 200
+    batch_size = 128
     nb_classes = 10
     pL = 0.5
-    weight_decay = 1e-4
+    weight_decay =  0.0001 #1e-4
     seed = 333
 
 
     # data
     (X_train, Y_train), (X_test, y_test) = cifar10.load_data()
-    X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
+    X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first  # samples, RGB, 32px, 32px
     X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
 
     
@@ -181,7 +185,8 @@ if __name__ == '__main__':
     gates=collections.OrderedDict()
     model = resnet(n = 18, nr_classes=nb_classes, stoch_depth = False)
     set_decay_rate()
-    model.compile(optimizer="rmsprop", loss="categorical_crossentropy",metrics=["accuracy"])  
+    sgd = optimizers.SGD(lr=0.1, momentum=0.9, nesterov=True)  #
+    model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
     # EDIT: Changed rmsprop to SGD? Shouldn't matter too much?
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
