@@ -64,7 +64,7 @@ Y_test = np_utils.to_categorical(Y_test, nb_classes)
 img_gen.fit(X_train, seed=seed)
 
 # Load model
-weights_file="weights/DenseNet-40-12-CIFAR10.h5"
+weights_file="DenseNet-40-12-CIFAR10.h5"
 if os.path.exists(weights_file):
     #model.load_weights(weights_file, by_name=True)
     print("Model loaded.")

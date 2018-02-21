@@ -72,13 +72,13 @@ Y_test = np_utils.to_categorical(Y_test, nb_classes)
 img_gen.fit(X_train, seed=seed)
 
 # Load model
-# model.load_weights("weights/DenseNet-BC-100-12-CIFAR100.h5")
+# model.load_weights("DenseNet-BC-100-12-CIFAR100.h5")
 # print("Model loaded.")
 
 lr_reducer      = ReduceLROnPlateau(monitor='val_loss', factor=np.sqrt(0.1),
                                     cooldown=0, patience=10, min_lr=0.5e-6)
 early_stopper   = EarlyStopping(monitor='val_acc', min_delta=0.0001, patience=20)
-model_checkpoint= ModelCheckpoint("weights/DenseNet-40-12-CIFAR100.h5", monitor="val_acc", save_best_only=True,
+model_checkpoint= ModelCheckpoint("DenseNet-40-12-CIFAR100.h5", monitor="val_acc", save_best_only=True,
                                   save_weights_only=True)
 
 callbacks=[lr_reducer, early_stopper, model_checkpoint]
