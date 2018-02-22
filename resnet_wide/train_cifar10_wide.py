@@ -22,6 +22,7 @@ epochs             = 200
 iterations         = 45000 // batch_size
 weight_decay       = 0.0005
 log_filepath       = r'./w_resnet/'
+seed = 333
 
 def scheduler(epoch):
     if epoch <= 60:
