@@ -1,0 +1,3 @@
+CIFAR10:
+loss: 0.0145 - acc: 0.9951 - val_loss: 0.4428 - val_acc: 0.9232
+('Accuracy : ', 91.52)

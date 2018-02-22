@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 from keras import optimizers
-from keras.datasets import cifar10
+from keras.datasets import cifar100
 from keras.models import Sequential
 from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from keras.callbacks import LearningRateScheduler, TensorBoard
@@ -13,7 +13,7 @@ import pickle
 batch_size    = 128
 epochs        = 200
 iterations    = 45000 // batch_size
-num_classes   = 10
+num_classes   = 100
 weight_decay  = 0.0001
 mean          = [125.307, 122.95, 113.865]
 std           = [62.9932, 62.0887, 66.7048]
@@ -28,9 +28,9 @@ def build_model():
     model.add(Conv2D(16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(120, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
-    model.add(Dense(84, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
-    model.add(Dense(10, activation = 'softmax', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
+    model.add(Dense(120*5, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))  # times 5 to not bottleneck the structure
+    model.add(Dense(84*5, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
+    model.add(Dense(num_classes, activation = 'softmax', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
     sgd = optimizers.SGD(lr=.1, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     return model
