@@ -85,12 +85,12 @@ if __name__ == '__main__':
                         callbacks=cbks,
                         validation_data=(x_val, y_val))
     # save model
-    model.save('lenet_c10.h5')
+    model.save('lenet_c100.h5')
     
     print("Get test accuracy:")
-    loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
+    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
     print("Pickle models history")
-    with open('hist_lenet_c10.p', 'wb') as f:
+    with open('hist_lenet_c100.p', 'wb') as f:
         pickle.dump(hist.history, f)
