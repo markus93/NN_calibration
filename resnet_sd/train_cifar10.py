@@ -101,7 +101,10 @@ def set_decay_rate():
 
 # Callbacks for updating gates and learning rate
 def scheduler(epoch):
-    if epoch < nb_epochs/2:
+
+    if epoch < 2:
+        return learning_rate*0.1
+    elif epoch < nb_epochs/2:
         return learning_rate
     elif epoch < nb_epochs*3/4:
         return learning_rate*0.1
@@ -192,6 +195,8 @@ if __name__ == '__main__':
 
     model.save_weights('model_weight_ep500_110SD_cifar_10.hdf5')
     
+    
+    # For evaluation should load model without gates?
 
     print("Get test accuracy:")
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)

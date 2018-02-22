@@ -4,6 +4,7 @@ import numpy as np
 import sklearn.metrics as metrics
 
 import wide_residual_network as wrn
+from keras.optimizer import SGD
 from keras.datasets import cifar10
 import keras.callbacks as callbacks
 from keras.utils import np_utils
@@ -15,8 +16,8 @@ from sklearn.model_selection import train_test_split
 from keras import backend as K
 import pickle
 
-batch_size = 100
-nb_epoch = 125
+batch_size = 128
+nb_epoch = 200
 img_rows, img_cols = 32, 32
 nb_classes = 10
 seed = 333
@@ -74,7 +75,8 @@ model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2,
 model.summary()
 #plot_model(model, "WRN-16-8.png", show_shapes=False)
 
-model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
+sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # dampening = 0.9?
+model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["acc"])
 print("Finished compiling")
 
 #model.load_weights("weights/WRN-16-8 Weights.h5")

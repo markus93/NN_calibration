@@ -34,9 +34,9 @@ learning_rate = 0.1
 
 
 def scheduler(epoch):
-    if epoch < nb_epochs/2:
+    if epoch < nb_epoch/2:
         return learning_rate
-    elif epoch < nb_epochs*3/4:
+    elif epoch < nb_epoch*3/4:
         return learning_rate*0.1
     return learning_rate*0.01
 
