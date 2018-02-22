@@ -78,13 +78,21 @@ if __name__ == '__main__':
     datagen = ImageDataGenerator(horizontal_flip=True,
             width_shift_range=0.125,height_shift_range=0.125,fill_mode='constant',cval=0.)
 
-    datagen.fit(x_train)
+    datagen.fit(x_train45)
 
     # start traing 
-    model.fit_generator(datagen.flow(x_train, y_train,batch_size=batch_size),
+    model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size),
                         steps_per_epoch=iterations,
                         epochs=epochs,
                         callbacks=cbks,
-                        validation_data=(x_test, y_test))
+                        validation_data=(x_val, y_val))
     # save model
-    model.save('lenet.h5')
+    model.save('lenet_c10.h5')
+    
+    print("Get test accuracy:")
+    loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
+    print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
+
+    print("Pickle models history")
+    with open('hist_lenet_c10.p', 'wb') as f:
+        pickle.dump(hist.history, f)

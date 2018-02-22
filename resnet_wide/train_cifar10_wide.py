@@ -133,7 +133,7 @@ if __name__ == '__main__':
                         validation_data=(x_val, y_val))
     model.save('resnet_wide_16_8_c10.h5')
     
-     print("Get test accuracy:")
+    print("Get test accuracy:")
     loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
     

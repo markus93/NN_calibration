@@ -46,7 +46,7 @@ model = densenet.DenseNet(img_dim, classes=nb_classes, depth=depth, nb_dense_blo
 print("Model created")
 
 model.summary()
-sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # dampening = 0.9?
+sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # dampening = 0.9? Should be zero?
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
 print("Finished compiling")
 print("Building model...")
