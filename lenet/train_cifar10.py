@@ -15,11 +15,8 @@ epochs        = 200
 iterations    = 45000 // batch_size
 num_classes   = 10
 weight_decay  = 0.0001
-mean          = [125.307, 122.95, 113.865]
-std           = [62.9932, 62.0887, 66.7048]
 seed = 333
 
-log_filepath  = './lenet_dp_da_wd'
 
 def build_model():
     model = Sequential()
@@ -51,10 +48,8 @@ if __name__ == '__main__':
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
     
-    # data preprocessing  [raw - mean / std]
-    for i in range(3):
-        x_train[:,:,:,i] = (x_train[:,:,:,i] - mean[i]) / std[i]
-        x_test[:,:,:,i] = (x_test[:,:,:,i] - mean[i]) / std[i]
+    x_train /= 255
+    x_test /= 255
         
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
@@ -73,13 +68,15 @@ if __name__ == '__main__':
 
     # using real-time data augmentation
     print('Using real-time data augmentation.')
-    datagen = ImageDataGenerator(horizontal_flip=True,
-            width_shift_range=0.125,height_shift_range=0.125,fill_mode='constant',cval=0.)
+    #datagen = ImageDataGenerator(horizontal_flip=True,
+    #        width_shift_range=0.125,height_shift_range=0.125,fill_mode='constant',cval=0.)
+            
+    datagen = ImageDataGenerator()
 
     datagen.fit(x_train45)
 
     # start traing 
-    model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size),
+    hist = model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size, shuffle=True),
                         steps_per_epoch=iterations,
                         epochs=epochs,
                         callbacks=cbks,

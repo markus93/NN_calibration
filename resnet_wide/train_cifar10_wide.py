@@ -126,7 +126,7 @@ if __name__ == '__main__':
     datagen.fit(x_train45)
 
     # start training
-    model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size),
+    hist = model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size),
                         steps_per_epoch=iterations,
                         epochs=epochs,
                         callbacks=cbks,
