@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# # Loading Data - SVHN
+# # Loading Data - SVHN - followed paper (https://arxiv.org/pdf/1603.09382.pdf)
 
 # Imports
 import numpy as np
@@ -8,7 +8,7 @@ import scipy.io
 from sklearn.model_selection import train_test_split
 
 
-# Split validation data
+# Split validation data ()
 
 # Split train data into train and validation gettting certain number of labels from each class
 def train_val_split_count(x_train, y_train, size, seed):
@@ -39,9 +39,12 @@ def train_val_split_count(x_train, y_train, size, seed):
     
     return (x_train, x_val, y_train, y_val)
 
+    
+ 
 
 
-def load_data_svhn():
+
+def load_data_svhn(seed = None):
     
 
     # Load in MatLab matrices
@@ -71,8 +74,8 @@ def load_data_svhn():
 
 
     # Split DATA
-    x_train1, x_val1, y_train1, y_val1 = train_val_split_count(x_train, y_train, size = 200, seed = 333)
-    x_extra2, x_val2, y_extra2, y_val2 = train_val_split_count(x_extra, y_extra, size = 400, seed = 333)
+    x_train1, x_val1, y_train1, y_val1 = train_val_split_count(x_train, y_train, size = 200, seed = seed)
+    x_extra2, x_val2, y_extra2, y_val2 = train_val_split_count(x_extra, y_extra, size = 400, seed = seed)
 
 
     # Add together train and extra data

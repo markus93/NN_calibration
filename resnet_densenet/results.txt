@@ -3,7 +3,7 @@ Epoch 00300: val_acc did not improve
 
 450/450 [==============================] - 88s 196ms/step - loss: 0.0262 - acc: 0.9992 - val_loss: 0.4550 - val_acc: 0.9194
 
-Test still to be calculated. (Validation low tho)
+Test still to be calculated. (Validation 2% lower tho, but good enough prolly)
 
 
 Paper: 5.91% (error)
