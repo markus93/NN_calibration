@@ -48,9 +48,9 @@ def load_data_svhn(seed = None):
     
 
     # Load in MatLab matrices
-    test_mat = scipy.io.loadmat('../data/data_svhn/test_32x32.mat')
-    train_mat = scipy.io.loadmat('../data/data_svhn/train_32x32.mat')
-    extra_mat = scipy.io.loadmat('../data/data_svhn/extra_32x32.mat')
+    test_mat = scipy.io.loadmat('../../data/data_svhn/test_32x32.mat')
+    train_mat = scipy.io.loadmat('../../data/data_svhn/train_32x32.mat')
+    extra_mat = scipy.io.loadmat('../../data/data_svhn/extra_32x32.mat')
 
 
     # Get data from matrices

@@ -9,6 +9,12 @@ from os import listdir
 from os.path import isfile, join
 from PIL import Image
 
+# Paths to files, change if necessary
+LABELS_PATH = '../../data/data_birds/CUB_200_2011/image_class_labels.txt'
+TRAIN_TEST_SPLIT_PATH = '../../data/data_birds/CUB_200_2011/train_test_split.txt'
+
+DATA_PATH = '../../data/data_birds/CUB_200_2011/images/'
+
 
 # Load in images
 def load_img(path, size = (256, 256)):
@@ -30,22 +36,16 @@ def center_crop(img_mat, size = (224, 224)):
     # Returns: ((x_train, y_train), (x_test, y_test))
 def load_data_birds(size = (256, 256), size_crop = (224, 224)):
 
-    # Paths to files, change if necessary
-    labels_path = '../data/data_birds/CUB_200_2011/image_class_labels.txt'
-    train_test_split_path = '../data/data_birds/CUB_200_2011/train_test_split.txt'
-
-    data_path = '../data/data_birds/CUB_200_2011/images/'
-
 
     # ### Get test and train labels
 
     # First get all the labels
-    labels = np.loadtxt(fname=labels_path, dtype="int16")
+    labels = np.loadtxt(fname=LABELS_PATH, dtype="int16")
     y_labels = labels[:,1]  # Get only second columnt of matrix
 
 
     # Secondly get train test split of images and labels
-    train_test_split = np.loadtxt(fname=train_test_split_path, dtype="int16")
+    train_test_split = np.loadtxt(fname=TRAIN_TEST_SPLIT_PATH, dtype="int16")
     train_test_split = train_test_split[:, 1]
 
 
@@ -62,13 +62,13 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
     # ### Load in images as numpy array
 
     # First get folders
-    # data_path
-    folders = listdir(data_path)  # TODO check is folder
+    # DATA_PATH
+    folders = listdir(DATA_PATH)  # TODO check is folder
     imgs = []
 
     # Get paths to all the images
     for folder in folders:  
-        path = data_path + folder + "/"
+        path = DATA_PATH + folder + "/"
         
         # TODO load in images
         imgs.extend([join(path, f) for f in listdir(path) if isfile(join(path, f))])
@@ -100,7 +100,7 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
 
     # Load in test images into array
     for i, img_path in enumerate(test_imgs):    
-        img_mat = load_img(test_data_path + img_path, size = size)  # First scale to (256,256)
+        img_mat = load_img(test_DATA_PATH + img_path, size = size)  # First scale to (256,256)
         x_test[i] = center_crop(img_mat, size = size_crop)  # Crop center of the image
 
 

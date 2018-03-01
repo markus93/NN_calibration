@@ -9,6 +9,12 @@ from os import listdir
 from os.path import isfile, join
 from PIL import Image
 
+# Paths to files
+TEST_LABELS_PATH = '../data/data_cars/cars_test_annos_labels.mat'
+TRAIN_LABELS_PATH = '../../data/data_cars/cars_train_annos.mat'
+TRAIN_DATA_PATH = "../../data/data_cars/cars_train/"  # Folder full of images
+TEST_DATA_PATH = "../../data/data_cars/cars_test/"
+
 # Load in images
 def load_img(path, size = (256, 256)):
     im = Image.open(path)
@@ -27,11 +33,9 @@ def center_crop(img_mat, size = (224, 224)):
 def load_data_cars(size = (256, 256), size_crop = (224, 224)):
 
     # Path to data - change according your paths
-    test_labels = scipy.io.loadmat('../data/data_cars/cars_test_annos_labels.mat')  # Labels saved as matlab mat-s
-    train_labels = scipy.io.loadmat('../data/data_cars/cars_train_annos.mat')
+    test_labels = scipy.io.loadmat(TEST_LABELS_PATH)  # Labels saved as matlab mat-s
+    train_labels = scipy.io.loadmat(TRAIN_LABELS_PATH)
 
-    train_data_path = "../data/data_cars/cars_train/"  # Folder full of images
-    test_data_path = "../data/data_cars/cars_test/"
 
     # Get labels from Matlab matrix
     test_labels = np.array(test_labels.get('annotations'))
@@ -59,9 +63,9 @@ def load_data_cars(size = (256, 256), size_crop = (224, 224)):
         
     # ### Load in images as numpy array
 
-    path = train_data_path
+    path = TRAIN_DATA_PATH
     train_imgs = [f for f in listdir(path) if isfile(join(path, f))]
-    path2 = test_data_path
+    path2 = TEST_DATA_PATH
     test_imgs = [f for f in listdir(path2) if isfile(join(path2, f))]
 
 
@@ -70,14 +74,14 @@ def load_data_cars(size = (256, 256), size_crop = (224, 224)):
     x_train = np.empty((len_train, size[0], size[1], 3), dtype="float32")
 
     for i, img_path in enumerate(train_imgs):
-        x_train[i] = load_img(train_data_path + img_path, size = size)
+        x_train[i] = load_img(TRAIN_DATA_PATH + img_path, size = size)
 
 
     # Fill in x_test array with test data
     x_test = np.empty((len_test, size_crop[0], size_crop[1], 3), dtype="float32")
 
     for i, img_path in enumerate(test_imgs):    
-        img_mat = load_img(test_data_path + img_path, size = size)  # First scale to (256,256)
+        img_mat = load_img(TEST_DATA_PATH + img_path, size = size)  # First scale to (256,256)
         x_test[i] = center_crop(img_mat, size = size_crop)  # Crop center of the image
 
 
