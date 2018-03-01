@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 from keras import optimizers
-from keras.datasets import cifar100
+from keras.datasets import cifar10, cifar100
 from keras.models import Sequential
 from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from keras.callbacks import LearningRateScheduler, TensorBoard
@@ -9,16 +9,21 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
 from sklearn.model_selection import train_test_split
 import pickle
+from calibration import evaluate_model
 
 batch_size    = 128
 epochs        = 200
 iterations    = 45000 // batch_size
-num_classes   = 100
+num_classes10   = 10
+num_classes100 = 100
 weight_decay  = 0.0001
 seed = 333
 
+weights_file_10 = "../../models/lenet_c10.h5"
+weights_file_100 = "../../models/lenet_c100.h5"
 
-def build_model():
+
+def build_model(num_classes = 10):
     model = Sequential()
     model.add(Conv2D(6, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
@@ -43,54 +48,49 @@ def scheduler(epoch):
 
 if __name__ == '__main__':
 
+    print("Evaluate CIFAR.10 - LeNet")
     # load data
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
-    
+        
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
-    # data preprocessing  [raw - mean / std]
     img_mean = X_train45.mean(axis=0)  # per-pixel mean
     img_std = X_train45.std(axis=0)
     X_train45 = (X_train45-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
     X_test = (X_test-img_mean)/img_std
-        
 
-    y_train45 = keras.utils.to_categorical(y_train45, num_classes)
-    y_val = keras.utils.to_categorical(y_val, num_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes)
+    y_train45 = keras.utils.to_categorical(y_train45, num_classes10)
+    y_val = keras.utils.to_categorical(y_val, num_classes10)
+    y_test = keras.utils.to_categorical(y_test, num_classes10)
 
 
     # build network
-    model = build_model()
-    print(model.summary())
+    model = build_model(num_classes10)
+    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
 
-    # set callback
-    change_lr = LearningRateScheduler(scheduler)
-    cbks = [change_lr]
-
-    # using real-time data augmentation
-    print('Using real-time data augmentation.')
-    datagen = ImageDataGenerator(horizontal_flip=True,
-            width_shift_range=0.125,height_shift_range=0.125,fill_mode='constant',cval=0.)
-
-    datagen.fit(x_train45)
-
-    # start traing 
-    model.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size, shuffle=True),
-                        steps_per_epoch=iterations,
-                        epochs=epochs,
-                        callbacks=cbks,
-                        validation_data=(x_val, y_val))
-    # save model
-    model.save('lenet_c10.h5')
     
-    print("Get test accuracy:")
-    loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
-    print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
+    print("Evaluate CIFAR.100 - LeNet")
+    # load data
+    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+        
+    x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
+    
+    img_mean = X_train45.mean(axis=0)  # per-pixel mean
+    img_std = X_train45.std(axis=0)
+    X_train45 = (X_train45-img_mean)/img_std
+    x_val = (x_val-img_mean)/img_std
+    X_test = (X_test-img_mean)/img_std
 
-    print("Pickle models history")
-    with open('hist_lenet_c10.p', 'wb') as f:
-        pickle.dump(hist.history, f)
+    y_train45 = keras.utils.to_categorical(y_train45, num_classes100)
+    y_val = keras.utils.to_categorical(y_val, num_classes100)
+    y_test = keras.utils.to_categorical(y_test, num_classes100)
+
+
+    # build network
+    model = build_model(num_classes100)
+    evaluate_model(model, weights_file_100, x_test, y_test, bins = 15, verbose = True)

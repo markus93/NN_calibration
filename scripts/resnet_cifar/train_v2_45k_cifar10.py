@@ -21,7 +21,7 @@ batch_size         = 128
 epochs             = 200
 iterations         = 45000 // batch_size
 weight_decay       = 0.0001
-mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm
+mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm  # TODO fix this!!!
 std  = [62.9932, 62.0887, 66.7048]
 seed = 333
 

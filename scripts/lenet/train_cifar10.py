@@ -15,8 +15,6 @@ epochs        = 200
 iterations    = 45000 // batch_size
 num_classes   = 10
 weight_decay  = 0.0001
-mean          = [125.307, 122.95, 113.865]
-std           = [62.9932, 62.0887, 66.7048]
 seed = 333
 
 log_filepath  = './lenet_dp_da_wd'
@@ -50,12 +48,7 @@ if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
-    
-    # data preprocessing  [raw - mean / std]
-    for i in range(3):
-        x_train[:,:,:,i] = (x_train[:,:,:,i] - mean[i]) / std[i]
-        x_test[:,:,:,i] = (x_test[:,:,:,i] - mean[i]) / std[i]
-        
+            
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
     img_mean = X_train45.mean(axis=0)  # per-pixel mean

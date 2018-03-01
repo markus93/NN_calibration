@@ -2,7 +2,7 @@
 
 import keras
 import numpy as np
-from keras.datasets import cifar10
+from keras.datasets import cifar10, cifar100
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers.normalization import BatchNormalization
 from keras.layers import Conv2D, Dense, Input, add, Activation, GlobalAveragePooling2D
@@ -11,10 +11,12 @@ from keras.models import Model
 from keras import optimizers, regularizers
 from sklearn.model_selection import train_test_split
 import pickle
+from calibration import evaluate_model
 
 
 stack_n            = 18            
-num_classes        = 10
+num_classes10      = 10
+num_classes100     = 100
 img_rows, img_cols = 32, 32
 img_channels       = 3
 batch_size         = 128
@@ -24,6 +26,8 @@ weight_decay       = 0.0001
 mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm
 std  = [62.9932, 62.0887, 66.7048]
 seed = 333
+weights_file_10 = "../../models/resnet_110_45k_c10.h5"
+weights_file_100 = "../../models/resnet_110_45k_c100.h5"
 
 def scheduler(epoch):
     if epoch < 80:
@@ -106,36 +110,38 @@ def color_preprocessing(x_train,x_test):
 if __name__ == '__main__':
 
     # load data
-    print("Cifar-10/100 evaluation")
-    print("Arguments:", sys.argv)
-    
-    if len(sys.argv) == 3:
-        num_classes = int(sys.argv[1])
-        weights_file = sys.argv[2]
-    else:
-        return "Insert number of classes and weights file path"
+    print("Cifar-10 evaluation")
         
-    
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-    y_test = keras.utils.to_categorical(y_test, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes10)
     
     # color preprocessing - using precalculated means and std-s
     x_train, x_test = color_preprocessing(x_train, x_test)
     
     # build network
     img_input = Input(shape=(img_rows,img_cols,img_channels))
-    output    = residual_network(img_input,num_classes,stack_n)
-    model    = Model(img_input, output)
-    print(model.summary())
-
-    # set optimizer
-    sgd = optimizers.SGD(lr=.1, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-
-    model.load_weights(weights_file, by_name=True)
+    output    = residual_network(img_input,num_classes10,stack_n)
+    model    = Model(img_input, output)    
+    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
     
-    print("Get test accuracy:")
-    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-    print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
+    # CIFAR-100 =========== evaluation
+    print("Cifar-100 evaluation")
+        
+    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+    y_train = keras.utils.to_categorical(y_train, num_classes100)
+    y_test = keras.utils.to_categorical(y_test, num_classes100)
     
+    x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
+    
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_std = x_train45.std(axis=0)
+    x_train45 = (x_train45-img_mean)/img_std
+    x_val = (x_val-img_mean)/img_std
+    x_test = (x_test-img_mean)/img_std
+    
+    # build network
+    img_input = Input(shape=(img_rows,img_cols,img_channels))
+    output    = residual_network(img_input,num_classes100,stack_n)
+    model    = Model(img_input, output)    
+    evaluate_model(model, weights_file_100, x_test, y_test, bins = 15, verbose = True)
     
