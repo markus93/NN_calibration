@@ -1,6 +1,8 @@
 # Functions for calibration of results
 import sklearn.metrics as metrics
 import numpy as np
+from __future__ import division, print_function
+
 
 def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True):
     """

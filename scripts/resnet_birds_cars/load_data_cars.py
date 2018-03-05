@@ -10,7 +10,7 @@ from os.path import isfile, join
 from PIL import Image
 
 # Paths to files
-TEST_LABELS_PATH = '../data/data_cars/cars_test_annos_labels.mat'
+TEST_LABELS_PATH = '../../data/data_cars/cars_test_annos_labels.mat'
 TRAIN_LABELS_PATH = '../../data/data_cars/cars_train_annos.mat'
 TRAIN_DATA_PATH = "../../data/data_cars/cars_train/"  # Folder full of images
 TEST_DATA_PATH = "../../data/data_cars/cars_test/"
