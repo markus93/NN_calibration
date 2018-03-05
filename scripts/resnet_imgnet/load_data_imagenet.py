@@ -76,7 +76,7 @@ def load_data_imagenet(size = (256, 256), size_crop = (224, 224)):
 
     # Fill in x_train array with train data
 
-    x_val = np.empty((len_val, *size_crop, 3), dtype="float32")
+    x_val = np.empty((len_val, size_crop[0], size_crop[1], 3), dtype="float32")
 
     for i, img_path in enumerate(val_imgs):
         img_mat = load_img(DATA_PATH + img_path, size = size)

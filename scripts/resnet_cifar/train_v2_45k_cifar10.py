@@ -21,8 +21,6 @@ batch_size         = 128
 epochs             = 200
 iterations         = 45000 // batch_size
 weight_decay       = 0.0001
-mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm  # TODO fix this!!!
-std  = [62.9932, 62.0887, 66.7048]
 seed = 333
 
 def scheduler(epoch):
@@ -95,25 +93,21 @@ def residual_network(img_input,classes_num=10,stack_n=5):
     return x
 
 
-def color_preprocessing(x_train,x_test):
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    for i in range(3):
-        x_train[:,:,:,i] = (x_train[:,:,:,i] - mean[i]) / std[i]
-        x_test[:,:,:,i] = (x_test[:,:,:,i] - mean[i]) / std[i]
-    return x_train, x_test
-
 if __name__ == '__main__':
+
     # load data
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     y_train = keras.utils.to_categorical(y_train, num_classes)
     y_test = keras.utils.to_categorical(y_test, num_classes)
     
-    # color preprocessing - using precalculated means and std-s
-    x_train, x_test = color_preprocessing(x_train, x_test)
-    
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-
+    
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_std = x_train45.std(axis=0)
+    x_train45 = (x_train45-img_mean)/img_std
+    x_val = (x_val-img_mean)/img_std
+    x_test = (x_test-img_mean)/img_std
+    
     # build network
     img_input = Input(shape=(img_rows,img_cols,img_channels))
     output    = residual_network(img_input,num_classes,stack_n)

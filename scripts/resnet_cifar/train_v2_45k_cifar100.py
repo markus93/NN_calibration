@@ -94,6 +94,7 @@ def residual_network(img_input,classes_num=10,stack_n=5):
 
 
 if __name__ == '__main__':
+
     # load data
     (x_train, y_train), (x_test, y_test) = cifar100.load_data()
     y_train = keras.utils.to_categorical(y_train, num_classes)
@@ -130,7 +131,7 @@ if __name__ == '__main__':
     datagen.fit(x_train45)
 
     # start training
-    hist = resnet.fit_generator(datagen.flow(x_train45, y_train45,batch_size=batch_size),
+    hist = resnet.fit_generator(datagen.flow(x_train45, y_train45, batch_size=batch_size),
                          steps_per_epoch=iterations,
                          epochs=epochs,
                          callbacks=cbks,
