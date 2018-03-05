@@ -11,6 +11,7 @@ from keras.models import Model
 from keras import initializations
 from keras.engine import Layer, InputSpec
 from keras import backend as K
+from load_data_imagenet import load_data_imagenet_split
 
 import sys
 sys.setrecursionlimit(3000)
@@ -211,35 +212,21 @@ def resnet152_model(weights_path=None):
 
 if __name__ == '__main__':
 
-  
-  # TODO load validation data
-  
-  #x_val, y_val = load_imagenet_val()  # Loads resized imagenet images
 
-  im = cv2.resize(cv2.imread('cat.jpg'), (224, 224)).astype(np.float32)
+    ## Load already split and resized data (mean subtracted)
+    seed = 333
+    num_classes = 1000
 
-  # Remove train image mean
-  im[:,:,0] -= 103.939
-  im[:,:,1] -= 116.779
-  im[:,:,2] -= 123.68
+    (x_val, y_val), (x_test, y_test) = load_data_imagenet_split(seed = seed)
 
-  if K.image_dim_ordering() == 'th':
-    # Transpose image dimensions (Theano uses the channels as the 1st dimension)
-    im = im.transpose((2,0,1))
+    y_val = keras.utils.to_categorical(y_val, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes)
 
-    # Use pre-trained weights for Theano backend
-    weights_path = 'resnet152_weights_th.h5'
-  else:
-    # Use pre-trained weights for Tensorflow backend
-    weights_path = 'resnet152_weights_tf.h5'
 
-  # Insert a new dimension for the batch_size
-  im = np.expand_dims(im, axis=0)
+    weights_file_resnet = "../../models/resnet152_weights_tf.h5"
 
-  # Test pretrained model
-  model = resnet152_model(weights_path)
-  sgd = SGD(lr=1e-2, decay=1e-6, momentum=0.9, nesterov=True)
-  model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+    model = resnet152_model()
+    sgd = SGD(lr=1e-2, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
-  out = model.predict(im)
-  print np.argmax(out)
+    evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True)
