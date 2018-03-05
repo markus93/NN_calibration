@@ -1,4 +1,5 @@
 # Functions for calibration of results
+from __future__ import division, print_function
 import sklearn.metrics as metrics
 import numpy as np
 

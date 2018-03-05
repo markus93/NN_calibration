@@ -48,21 +48,21 @@ model = densenet.DenseNet(img_dim, classes=nb_classes10, depth=depth, nb_dense_b
                           growth_rate=growth_rate, nb_filter=nb_filter, dropout_rate=dropout_rate, weights=None, weight_decay=1e-4)
 
                           
-(X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
+x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
 #For data preprocessing, we normalize the data using the channel means and standard deviations (https://arxiv.org/pdf/1608.06993v3.pdf)
 
-img_mean = X_train45.mean(axis=0)  # per-pixel mean
-img_std = X_train45.std(axis=0)  # std
-X_train45 = (X_train45-img_mean)/img_std
+img_mean = x_train45.mean(axis=0)  # per-pixel mean
+img_std = x_train45.std(axis=0)  # std
+x_train45 = (x_train45-img_mean)/img_std
 x_val = (x_val-img_mean)/img_std
-X_test = (X_test-img_mean)/img_std
+x_test = (x_test-img_mean)/img_std
 
-Y_train45 = np_utils.to_categorical(Y_train45, nb_classes10)  # 1-hot vector
+y_train45 = np_utils.to_categorical(y_train45, nb_classes10)  # 1-hot vector
 y_val = np_utils.to_categorical(y_val, nb_classes10)
-Y_test = np_utils.to_categorical(Y_test, nb_classes10)
+y_test = np_utils.to_categorical(y_test, nb_classes10)
 evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
 
 
@@ -75,19 +75,19 @@ model = densenet.DenseNet(img_dim, classes=nb_classes100, depth=depth, nb_dense_
                           growth_rate=growth_rate, nb_filter=nb_filter, dropout_rate=dropout_rate, weights=None, weight_decay=1e-4)
 
                           
-(X_train, Y_train), (X_test, Y_test) = cifar100.load_data()
+(x_train, y_train), (x_test, y_test) = cifar100.load_data()
 
-X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
+x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
 #For data preprocessing, we normalize the data using the channel means and standard deviations (https://arxiv.org/pdf/1608.06993v3.pdf)
-img_mean = X_train45.mean(axis=0)  # per-pixel mean
-img_std = X_train45.std(axis=0)  # std
-X_train45 = (X_train45-img_mean)/img_std
-x_val = (x_val-img_mean)/img_std
-X_test = (X_test-img_mean)/img_std
 
-Y_train45 = np_utils.to_categorical(Y_train45, nb_classes100)  # 1-hot vector
+img_mean = x_train45.mean(axis=0)  # per-pixel mean
+img_std = x_train45.std(axis=0)  # std
+x_train45 = (x_train45-img_mean)/img_std
+x_val = (x_val-img_mean)/img_std
+x_test = (x_test-img_mean)/img_std
+
+y_train45 = np_utils.to_categorical(y_train45, nb_classes100)  # 1-hot vector
 y_val = np_utils.to_categorical(y_val, nb_classes100)
-Y_test = np_utils.to_categorical(Y_test, nb_classes100)
-   
+y_test = np_utils.to_categorical(y_test, nb_classes100)
 evaluate_model(model, weights_file_100, x_test, y_test, bins = 15, verbose = True)

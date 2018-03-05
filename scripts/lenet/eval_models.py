@@ -56,11 +56,11 @@ if __name__ == '__main__':
         
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
-    img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    img_std = X_train45.std(axis=0)
-    X_train45 = (X_train45-img_mean)/img_std
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_std = x_train45.std(axis=0)
+    x_train45 = (x_train45-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
-    X_test = (X_test-img_mean)/img_std
+    x_test = (x_test-img_mean)/img_std
 
     y_train45 = keras.utils.to_categorical(y_train45, num_classes10)
     y_val = keras.utils.to_categorical(y_val, num_classes10)
@@ -80,11 +80,11 @@ if __name__ == '__main__':
         
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
-    img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    img_std = X_train45.std(axis=0)
-    X_train45 = (X_train45-img_mean)/img_std
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_std = x_train45.std(axis=0)
+    x_train45 = (x_train45-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
-    X_test = (X_test-img_mean)/img_std
+    x_test = (x_test-img_mean)/img_std
 
     y_train45 = keras.utils.to_categorical(y_train45, num_classes100)
     y_val = keras.utils.to_categorical(y_val, num_classes100)

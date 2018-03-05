@@ -143,7 +143,8 @@ class Gates_Callback(Callback):
             
             
 
-
+# CIFAR-10 ============================================
+print("Evaluation CIFAR-10 SD")
 
 # TODO data loader script?
 # data
@@ -168,9 +169,6 @@ y_val = np_utils.to_categorical(y_val, nb_classes)
 y_test = np_utils.to_categorical(y_test, nb_classes)
 
 
-# CIFAR-10 ============================================
-
-print("Evaluation CIFAR-10")
 # building and training net
 gates=collections.OrderedDict()
 model = resnet(nr_classes=nb_classes)
@@ -179,7 +177,7 @@ model = resnet(nr_classes=nb_classes)
 evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
 
 # CIFAR-100 ======================================
-print("Evaluation CIFAR-100")
+print("Evaluation CIFAR-100 SD")
 
 # TODO data loader script?
 # data
