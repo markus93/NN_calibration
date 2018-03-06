@@ -19,12 +19,12 @@ if __name__ == '__main__':
     weights_file_densenet = "../../models/densenet161_weights_tf.h5"
 
 
-    #(x_val, y_val), (x_test, y_test) = load_data_imagenet_split(seed = seed)
+    (x_val, y_val), (x_test, y_test) = load_data_imagenet_split(seed = seed)
     
     print("Data loaded.")
 
-    #y_val = keras.utils.to_categorical(y_val, num_classes)
-    #y_test = keras.utils.to_categorical(y_test, num_classes)
+    y_val = keras.utils.to_categorical(y_val, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 
@@ -33,10 +33,9 @@ if __name__ == '__main__':
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     print("Start evaluation!")
-    #evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True)
+    evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True)
     
-    
-    ##
+
     print("Evaluate DenseNet161")
     
     # Subtract mean pixel and multiple by scaling constant 
