@@ -66,7 +66,8 @@ def load_data_imagenet(size = (256, 256), size_crop = (224, 224)):
     # ### Get test and train labels
 
     # First get all the labels
-    y_val = np.loadtxt(fname=LABELS_PATH, dtype="int16")
+    y_val = np.loadtxt(fname=LABELS_PATH, dtype="str")  # Loads in tuple ("img_name", class)
+    y_val = np.array(list(map(int, y_val[:,1])), dtype="int16")
         
     # ### Load in images as numpy array
 

@@ -3,6 +3,7 @@
 
 import numpy as np
 
+import keras
 from keras.layers import Input, Dense, Convolution2D, MaxPooling2D, AveragePooling2D, ZeroPadding2D, Dropout, Flatten, merge, Reshape, Activation, Lambda, GlobalAveragePooling2D, Merge
 from keras.optimizers import SGD
 from keras.layers.normalization import BatchNormalization
@@ -254,7 +255,7 @@ if __name__ == '__main__':
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
     
     for i in range(3):
-        im[:,:,:,i] *= 0.017
+        x_test[:,:,:,i] *= 0.017
     
     evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True)
 
