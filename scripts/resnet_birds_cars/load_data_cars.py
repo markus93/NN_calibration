@@ -59,6 +59,12 @@ def load_data_cars(size = (256, 256), size_crop = (224, 224)):
     for i in range(len_train):
         y_train[i] = train_labels[0][i][4][0][0]
 
+    #
+    print("Current minimal label", min(y_test), "and max:", max(y_test)) 
+    # Should be 1, but want it to be 0, so we could use 1-hot vector
+    y_test -= 1  # min label zero, max 195
+    y_train -= 1
+    print("New minimal label:", min(y_test), "and max:", max(y_test))
 
         
     # ### Load in images as numpy array

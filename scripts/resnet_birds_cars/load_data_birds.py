@@ -42,6 +42,10 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
     # First get all the labels
     labels = np.loadtxt(fname=LABELS_PATH, dtype="int16")
     y_labels = labels[:,1]  # Get only second columnt of matrix
+    
+    y_labels -= 1  # So min would be 0 and max 199
+    print("New minimal label:", min(y_labels), "and max:", max(y_labels))
+
 
 
     # Secondly get train test split of images and labels

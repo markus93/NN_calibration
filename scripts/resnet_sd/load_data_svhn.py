@@ -23,8 +23,9 @@ def train_val_split_count(x_train, y_train, size, seed):
     y_val = []
     split = []
 
+    
     for i in labels:
-        labels_i = np.where(y_train == i)[0]
+        labels_i = np.where(y_train == i)[0]  # Take set of only one label
         samples = np.random.choice(labels_i, size)  # TODO: Check if enough labels in the class
         split.append(samples)
 
@@ -82,9 +83,14 @@ def load_data_svhn(seed = None):
 
     x_train_all = np.concatenate([x_train1, x_extra2])
     y_train_all = np.concatenate([y_train1, y_extra2])
+    
+    y_train_all -= 1  # So 0 would be smallest label and 9 biggest
+    
 
     x_val_all = np.concatenate([x_val1, x_val2])
     y_val_all = np.concatenate([y_val1, y_val2])
+    
+    y_val_all -= 1  # So 0 would be smallest label and 9 biggest
 
     return ((x_train_all, y_train_all), (x_val_all, y_val_all), (x_test, y_test))
 
