@@ -144,9 +144,10 @@ if __name__ == '__main__':
     # data
     print("Loading data, may take some time and memory!")
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = load_data_svhn(seed = seed)
-    x_train = np.transpose(x_train.astype('float32'), (0, 3, 1, 2))  # Channels first
-    x_test = np.transpose(x_test.astype('float32'), (0, 3, 1, 2))  # Channels first
-    x_val = np.transpose(x_test.astype('float32'), (0, 3, 1, 2))  # Channels first
+    x_train = x_train.astype('float32')  # Channels first
+    x_test = x_test.astype('float32')  # Channels first
+    x_val = x_test.astype('float32')  # Channels first
+    print(x_train.shape)
     print("Data loaded")
     
     # Simple preprocessing - subtract mean and divide by standard division
@@ -168,7 +169,7 @@ if __name__ == '__main__':
     set_decay_rate()
     sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
-    # EDIT: Changed rmsprop to SGD? Shouldn't matter too much?
+
     print("Model compiled")
 
     for i in gates:
@@ -184,7 +185,7 @@ if __name__ == '__main__':
     model.save_weights('model_weight_ep50_152SD_svhn.hdf5')
     
     
-    # For evaluation should load model without gates?
+    # For evaluation should load model with pL = 1
 
     print("Get test accuracy:")
     loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
@@ -194,5 +195,3 @@ if __name__ == '__main__':
     with open('hist_152SD_svhn.p', 'wb') as f:
         pickle.dump(hist.history, f)
     
-    
-

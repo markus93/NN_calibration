@@ -31,19 +31,19 @@ if __name__ == "__main__":
 
     print("Load data")
     
-    #(x_train, y_train), (x_test, y_test) = load_data_cars(SIZE_IMG, SIZE_CROP)
+    (x_train, y_train), (x_test, y_test) = load_data_cars(SIZE_IMG, SIZE_CROP)
     
-    #y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
-    #y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
+    y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
+    y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
-    #x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
+    x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
     
     #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
     
-    #img_mean = x_train.mean(axis=(0,1,2))  # per-channel mean, should use imagenet means?
-    #x_train = (x_train-img_mean)
-    #x_val = (x_val-img_mean)
-    #x_test50 = (x_test50-img_mean)
+    img_mean = x_train.mean(axis=(0,1,2))  # per-channel mean, should use imagenet means?
+    x_train = (x_train-img_mean)
+    x_val = (x_val-img_mean)
+    x_test50 = (x_test50-img_mean)
     
     # set data augmentation
     print('Using real-time data augmentation.')
@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     datagen.set_pipeline([random_crop])
     # Add random crop for training
-    #datagen.fit(x_train) 
+    datagen.fit(x_train) 
     
     print("Load model")
     model = keras.applications.resnet50.ResNet50()  # Load in pretrained model (ImageNet)

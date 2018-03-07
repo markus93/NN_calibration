@@ -100,7 +100,7 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
 
     # Load in test images into array
     for i, img_path in enumerate(test_imgs):    
-        img_mat = load_img(test_DATA_PATH + img_path, size = size)  # First scale to (256,256)
+        img_mat = load_img(img_path, size = size)  # First scale to (256,256)
         x_test[i] = center_crop(img_mat, size = size_crop)  # Crop center of the image
 
 
