@@ -288,19 +288,21 @@ def standardize(x,
             x = np.reshape(whitex, (x.shape[0], x.shape[1], x.shape[2]))
     return x
 
-def center_crop(x, center_crop_size, **kwargs):
-    centerw, centerh = x.shape[1]//2, x.shape[2]//2
+# TODO - add dimension ordering if-else
+def center_crop(x, center_crop_size, dim_ordering=K.image_dim_ordering(), **kwargs):
+    centerw, centerh = x.shape[0]//2, x.shape[1]//2
     halfw, halfh = center_crop_size[0]//2, center_crop_size[1]//2
-    return x[:, centerw-halfw:centerw+halfw,centerh-halfh:centerh+halfh]
+    return x[centerw-halfw:centerw+halfw,centerh-halfh:centerh+halfh, :]
 
-def random_crop(x, random_crop_size, sync_seed=None, **kwargs):
+# TODO add version for theano dimension ordering
+def random_crop(x, random_crop_size, sync_seed=None, dim_ordering=K.image_dim_ordering(), **kwargs):
     np.random.seed(sync_seed)
-    w, h = x.shape[1], x.shape[2]
+    w, h = x.shape[0], x.shape[1]  # Channels last
     rangew = (w - random_crop_size[0]) // 2
     rangeh = (h - random_crop_size[1]) // 2
     offsetw = 0 if rangew == 0 else np.random.randint(rangew)
     offseth = 0 if rangeh == 0 else np.random.randint(rangeh)
-    return x[:, offsetw:offsetw+random_crop_size[0], offseth:offseth+random_crop_size[1]]
+    return x[offsetw:offsetw+random_crop_size[0], offseth:offseth+random_crop_size[1], :]
 
 def random_transform(x,
                      dim_ordering='th',

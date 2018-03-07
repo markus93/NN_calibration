@@ -91,6 +91,8 @@ def load_data_svhn(seed = None):
     y_val_all = np.concatenate([y_val1, y_val2])
     
     y_val_all -= 1  # So 0 would be smallest label and 9 biggest
+    y_test -= 1  # So 0 would be smallest label and 9 biggest
+
 
     return ((x_train_all, y_train_all), (x_val_all, y_val_all), (x_test, y_test))
 
