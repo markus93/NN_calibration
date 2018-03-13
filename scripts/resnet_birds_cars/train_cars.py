@@ -17,7 +17,6 @@ from image_gen_extended import ImageDataGenerator, random_crop
 SIZE_IMG = (256, 256)
 SIZE_CROP = (224, 224)
 BATCH_SIZE = 64
-SEED = 333
 NR_CLASSES = 196  # Classes for cars?
 EPOCHS = 250
 SEED = 333  # Random seed for reproducibility
@@ -74,7 +73,7 @@ if __name__ == "__main__":
     print("Start training")
     hist = model.fit_generator(datagen.flow(x_train, y_train, batch_size=BATCH_SIZE),
                          steps_per_epoch=len(x_train) // BATCH_SIZE,
-                         epochs=epochs,
+                         epochs=EPOCHS,
                          callbacks=cbks,
                          validation_data=(x_val, y_val))
                          

@@ -175,7 +175,7 @@ if __name__ == '__main__':
     for i in gates:
         print(K.get_value(gates[i][1]), gates[i][0],i)
 
-    hist = model.fit(x=x_train, y=y_train, batch_size=batch_size, shuffle=True,
+    hist = model.fit(x=x_train, y=y_train, shuffle=True,
                     steps_per_epoch=len(x_train) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,
