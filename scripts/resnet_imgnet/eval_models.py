@@ -7,7 +7,7 @@ from densenet161 import DenseNet
 from load_data_imagenet import load_data_imagenet_split
 from resnet152 import resnet152_model
 import keras
-from calibration import 
+from calibration import evaluate_model
 
 # Constants
 
