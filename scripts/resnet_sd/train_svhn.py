@@ -144,9 +144,9 @@ if __name__ == '__main__':
     # data
     print("Loading data, may take some time and memory!")
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = load_data_svhn(seed = seed)
-    x_train = x_train.astype('float32')  # Channels first
-    x_test = x_test.astype('float32')  # Channels first
-    x_val = x_test.astype('float32')  # Channels first
+    x_train = np.transpose(x_train.astype('float32'), (0, 3, 1, 2))  # Channels first
+    x_test = np.transpose(x_test.astype('float32'), (0, 3, 1, 2))  # Channels first
+    x_val = np.transpose(x_val.astype('float32'), (0, 3, 1, 2))  # Channels first
     print(x_train.shape)
     print("Data loaded")
     
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         print(K.get_value(gates[i][1]), gates[i][0],i)
 
     hist = model.fit(x=x_train, y=y_train, batch_size=batch_size, shuffle=True,
-                    steps_per_epoch=len(x_train45) // batch_size,
+                    steps_per_epoch=len(x_train) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,
                     validation_data = (x_val, y_val),
