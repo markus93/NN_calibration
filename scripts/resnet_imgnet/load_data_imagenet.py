@@ -101,10 +101,6 @@ def load_data_imagenet_split(size = (256, 256), size_crop = (224, 224), seed = 3
     """
     
     x,y = load_data_imagenet(size, size_crop)  # Load in data
-
-    
-    for i in range(3):
-        x[:,:,:,i] -= IMG_MEAN[i]
     
     x_test, x_val, y_test, y_val = train_test_split(x, y, test_size=0.5, random_state=seed)
     
