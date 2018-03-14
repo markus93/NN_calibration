@@ -76,7 +76,7 @@ if __name__ == "__main__":
     cbks = [early_stopping, checkpointer]
 
     print("Start training")
-    hist = model.fit_generator(datagen.flow(x_train, y_train, batch_size=BATCH_SIZE),
+    hist = model.fit_generator(datagen.flow(x_train, y_train, shuffle=True, batch_size=BATCH_SIZE),
                          steps_per_epoch=len(x_train) // BATCH_SIZE,
                          epochs=EPOCHS,
                          callbacks=cbks,
