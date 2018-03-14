@@ -138,7 +138,7 @@ if __name__ == '__main__':
     weight_decay = 1e-4
     seed = 333
     layers = 152
-    n = (layers - 2)/6  # 25
+    n = 25  # (layers - 2)//6
 
 
     # data

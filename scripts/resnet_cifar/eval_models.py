@@ -147,6 +147,6 @@ if __name__ == '__main__':
     # build network
     img_input = Input(shape=(img_rows,img_cols,img_channels))
     output    = residual_network(img_input,num_classes100,stack_n)
-    model    = Model(img_input, output)    
-    evaluate_model(model, weights_file_100, x_test, y_test, bins = 15, verbose = True)
+    model2    = Model(img_input, output)    
+    evaluate_model(model2, weights_file_100, x_test, y_test, bins = 15, verbose = True)
     

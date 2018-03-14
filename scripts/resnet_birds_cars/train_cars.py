@@ -35,14 +35,18 @@ if __name__ == "__main__":
     y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
     y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
-    x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
     
     #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
+    x_train = x_train[..., ::-1]
+    x_test = x_test[..., ::-1]
     
-    img_mean = x_train.mean(axis=(0,1,2))  # per-channel mean, should use imagenet means?
-    x_train = (x_train-img_mean)
-    x_val = (x_val-img_mean)
-    x_test50 = (x_test50-img_mean)
+    for i in range(3):
+        x_train[:,:,:,i] -= MEAN[i]
+        x_test[:,:,:,i] -= MEAN[i]
+    
+    x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
+    
+    
     
     # set data augmentation
     print('Using real-time data augmentation.')

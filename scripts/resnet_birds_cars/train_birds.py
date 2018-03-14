@@ -21,6 +21,9 @@ NR_CLASSES = 200  # Classes for birds
 EPOCHS = 250
 SEED = 333  # Random seed for reproducibility
 
+MEAN = [103.939, 116.779, 123.68]
+
+
 # Train 5994 and val/test 2897
 
 # Issue about random crop
@@ -35,14 +38,17 @@ if __name__ == "__main__":
     y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
     y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
+    #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
+    x_train = x_train[..., ::-1]
+    x_test = x_test[..., ::-1]
+    
+    for i in range(3):
+        x_train[:,:,:,i] -= MEAN[i]
+        x_test[:,:,:,i] -= MEAN[i]
+    
     x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
     
-    #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
     
-    img_mean = x_train.mean(axis=(0,1,2))  # per-channel mean, should use imagenet means?
-    x_train = (x_train-img_mean)
-    x_val = (x_val-img_mean)
-    x_test50 = (x_test50-img_mean)
     
     # set data augmentation
     print('Using real-time data augmentation.')
@@ -69,6 +75,8 @@ if __name__ == "__main__":
     early_stopping = EarlyStopping(patience=10)
     checkpointer = ModelCheckpoint('resnet50_birds_best.h5', verbose=1, save_best_only=True)
     cbks = [early_stopping, checkpointer]
+    
+    print(model.summary())
 
     print("Start training")
     hist = model.fit_generator(datagen.flow(x_train, y_train, batch_size=BATCH_SIZE),
