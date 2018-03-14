@@ -20,6 +20,7 @@ BATCH_SIZE = 64
 NR_CLASSES = 196  # Classes for cars?
 EPOCHS = 250
 SEED = 333  # Random seed for reproducibility
+MEAN = [103.939, 116.779, 123.68]
 
 # Train 8144 and test 8041
 

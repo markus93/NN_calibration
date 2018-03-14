@@ -33,6 +33,9 @@ def scheduler(epoch):
         return 0.004
     return 0.0008
 
+    
+# Preprocessing based on the paper http://arxiv.org/abs/1605.07146
+# and their code https://github.com/szagoruyko/wide-residual-networks
 def color_preprocessing(x_train,x_test):
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
@@ -121,7 +124,7 @@ if __name__ == '__main__':
     # set data augmentation
     print('Using real-time data augmentation.')
     datagen = ImageDataGenerator(horizontal_flip=True,
-            width_shift_range=0.125,height_shift_range=0.125,fill_mode='constant',cval=0.)
+            width_shift_range=0.125,height_shift_range=0.125,fill_mode='reflect') # Missing pixels replaced with reflections
 
     datagen.fit(x_train45)
 
