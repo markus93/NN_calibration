@@ -12,7 +12,8 @@ import pickle
 from sklearn.model_selection import train_test_split
 from load_data_birds import load_data_birds
 from image_gen_extended import ImageDataGenerator, random_crop
-
+from keras.layers import GlobalAveragePooling2D, Dense
+from keras.models import Model
 
 SIZE_IMG = (256, 256)
 SIZE_CROP = (224, 224)
@@ -60,16 +61,21 @@ if __name__ == "__main__":
     datagen.fit(x_train) 
     
     print("Load model")
-    model = keras.applications.resnet50.ResNet50()  # Load in pretrained model (ImageNet)
-
-    model.layers.pop()  # Remove last layer
-    for layer in model.layers:
-        layer.trainable=False  # Set model layers untrainable
-        
-    last = model.layers[-1].output  # Get last layer
     
-    x = Dense(NR_CLASSES, activation="softmax")(last)  # Add new trainable Dense layer in the end.
-    model = Model(model.input, x)
+    base_model = keras.applications.resnet50.ResNet50(include_top=False)  # Load in pretrained model (ImageNet)
+
+    for layer in base_model.layers:
+        layer.trainable=False
+
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    # let's add a fully-connected layer
+    x = Dense(1024, activation='relu')(x)
+    # and a logistic layer -- let's say we have 200 classes
+    predictions = Dense(NR_CLASSES, activation='softmax')(x)
+
+    model = Model(inputs=base_model.input, outputs=predictions)
+    
     model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
