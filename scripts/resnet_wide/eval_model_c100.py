@@ -101,25 +101,6 @@ def wide_residual_network(img_input,classes_num,depth,k):
 
 if __name__ == '__main__':
 
-    print("Evaluate CIFAR-10 wide resnet")
-    # load data
-    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-    
-    # color preprocessing
-    x_train, x_test = color_preprocessing(x_train, x_test)
-    x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-
-    y_train45 = keras.utils.to_categorical(y_train45, num_classes)
-    y_val = keras.utils.to_categorical(y_val, num_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes)
-
-    # build network
-    img_input = Input(shape=(img_rows,img_cols,img_channels))
-    output = wide_residual_network(img_input,num_classes,depth,wide)
-    model = Model(img_input, output)
-    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
-    
-    
     
     # CIFAR-100 ====================
     print("Evaluate CIFAR-100 wide resnet")
