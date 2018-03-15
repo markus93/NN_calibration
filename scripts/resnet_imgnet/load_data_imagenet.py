@@ -28,7 +28,7 @@ def load_img(path, size = (256, 256)):
     im = Image.open(path)
     im = im.resize(size, Image.ANTIALIAS)
     rgb_im = im.convert('RGB')  # Some imageses are in Grayscale
-    return np.array(rgb_im)
+    return np.array(rgb_im, dtype="float32")
 
 # Get center of image array
 def center_crop(img_mat, size = (224, 224)):

@@ -72,7 +72,7 @@ print("Building model...")
 #For data preprocessing, we normalize the data using the channel means and standard deviations (https://arxiv.org/pdf/1608.06993v3.pdf)
 x_train, x_test = color_preprocessing(x_train, x_test)
 
-x_train45, x_val, y_train45, y_val = train_test_split(x_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
+x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
 
 img_gen = ImageDataGenerator(

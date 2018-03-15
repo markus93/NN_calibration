@@ -12,18 +12,24 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
         weights (string): path to weights file
         x_test: (numpy.ndarray) with x_test data (already in right format)
         y_test: (numpy.ndarray) with y_test data (1-hot vector)
+        bins: (int): into how many bins is the data split, used to calculate ECE,MCE
+        verbose: (boolean): print out results or just return these
         
     Returns:
         (acc, ece, mce): accuracy of model, ECE and MCE (calibration errors)
     """
     
     # First load in the weights
-    model.load_weights(weights_file, by_name=True)
+    model.load_weights(weights_file)
     
     # Next get predictions
     y_probs = model.predict(x_test)
     y_preds = np.argmax(y_probs, axis=1)
     y_true = y_test
+    
+    # Debug
+    print(y_preds[:100])
+    print(y_true[:100])
     
     # Find accuracy and error
     y_true = [ np.where(r==1)[0][0] for r in y_true]  # 1-hot vector back to numeric

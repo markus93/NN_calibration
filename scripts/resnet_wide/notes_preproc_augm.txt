@@ -1,0 +1,10 @@
+WideNet
+
+Unless mentioned otherwise, for CIFAR we follow the
+image preprocessing of [8] with ZCA whitening. However, for some CIFAR experiments
+we instead use simple mean/std normalization such that we can directly comp
+
+CIFAR-10 and CIFAR-100 datasets [17] consist of 32 × 32 color
+images drawn from 10 and 100 classes split into 50,000 train and 10,000 test images. For data
+augmentation we do horizontal flips and take random crops from image padded by 4 pixels on
+each side, filling missing pixels with reflections of original image.
