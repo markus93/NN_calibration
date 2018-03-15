@@ -23,8 +23,6 @@ batch_size         = 128
 epochs             = 200
 iterations         = 45000 // batch_size
 weight_decay       = 0.0001
-mean = [125.307, 122.95, 113.865]  # Mean (per-pixel mean?) - let it be atm
-std  = [62.9932, 62.0887, 66.7048]
 seed = 333
 weights_file_10 = "../../models/resnet_110_45k_c10.h5"
 weights_file_100 = "../../models/resnet_110_45k_c100.h5"
@@ -108,28 +106,7 @@ def color_preprocessing(x_train,x_test):
     return x_train, x_test
 
 if __name__ == '__main__':
-
-    # load data
-    print("Cifar-10 evaluation")
-        
-    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-    y_test = keras.utils.to_categorical(y_test, num_classes10)
-    
-    # color preprocessing - using precalculated means and std-s
-    x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-    
-    img_mean = x_train45.mean(axis=0)  # per-pixel mean
-    img_std = x_train45.std(axis=0)
-    x_train45 = (x_train45-img_mean)/img_std
-    x_val = (x_val-img_mean)/img_std
-    x_test = (x_test-img_mean)/img_std
-    
-    # build network
-    img_input = Input(shape=(img_rows,img_cols,img_channels))
-    output    = residual_network(img_input,num_classes10,stack_n)
-    model    = Model(img_input, output)    
-    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
-    
+  
     # CIFAR-100 =========== evaluation
     print("Cifar-100 evaluation")
         
