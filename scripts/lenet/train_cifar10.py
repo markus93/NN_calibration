@@ -19,16 +19,20 @@ seed = 333
 
 log_filepath  = './lenet_dp_da_wd'
 
-def build_model():
+def build_model(n=1, num_classes = 10):
+    """
+    parameters:
+        n: (int) scaling for model (n times filters in Conv2D and nodes in Dense)
+    """
     model = Sequential()
-    model.add(Conv2D(6, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
+    model.add(Conv2D(n*12, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-    model.add(Conv2D(16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
+    model.add(Conv2D(n*16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(120, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
-    model.add(Dense(84, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
-    model.add(Dense(10, activation = 'softmax', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
+    model.add(Dense(n*120, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
+    model.add(Dense(n*84, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
+    model.add(Dense(num_classes, activation = 'softmax', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
     sgd = optimizers.SGD(lr=.1, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     return model
@@ -41,21 +45,26 @@ def scheduler(epoch):
     if epoch <= 160:    
         return 0.002
     return 0.0004
+    
+def color_preprocessing(x_train,x_test):
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    mean = [125.307, 122.95, 113.865]
+    std  = [62.9932, 62.0887, 66.7048]
+    for i in range(3):
+        x_train[:,:,:,i] = (x_train[:,:,:,i] - mean[i]) / std[i]
+        x_test[:,:,:,i] = (x_test[:,:,:,i] - mean[i]) / std[i]
+
+    return x_train, x_test
 
 if __name__ == '__main__':
 
     # load data
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-            
+    x_train, x_test = color_preprocessing(x_train, x_test)
+      
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
-    img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    img_std = X_train45.std(axis=0)
-    X_train45 = (X_train45-img_mean)/img_std
-    x_val = (x_val-img_mean)/img_std
-    X_test = (X_test-img_mean)/img_std
 
     y_train45 = keras.utils.to_categorical(y_train45, num_classes)
     y_val = keras.utils.to_categorical(y_val, num_classes)
@@ -63,7 +72,7 @@ if __name__ == '__main__':
 
 
     # build network
-    model = build_model()
+    model = build_model(n=2, num_classes = num_classes)
     print(model.summary())
 
     # set callback
