@@ -12,7 +12,8 @@ import pickle
 from sklearn.model_selection import train_test_split
 from load_data_cars import load_data_cars
 from image_gen_extended import ImageDataGenerator, random_crop
-
+from keras.layers import GlobalAveragePooling2D, Dense
+from keras.models import Model
 
 SIZE_IMG = (256, 256)
 SIZE_CROP = (224, 224)
@@ -61,8 +62,9 @@ if __name__ == "__main__":
     print("Load model")
     base_model = keras.applications.resnet50.ResNet50(include_top=False)  # Load in pretrained model (ImageNet)
 
-    for layer in base_model.layers:
-        layer.trainable=False
+    # Atm all layers trainable -> Test with only base layers untrainable 
+    #for layer in base_model.layers:
+    #   layer.trainable=False
 
     x = base_model.output
     x = GlobalAveragePooling2D()(x)

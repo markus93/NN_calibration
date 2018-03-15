@@ -64,8 +64,9 @@ if __name__ == "__main__":
     
     base_model = keras.applications.resnet50.ResNet50(include_top=False)  # Load in pretrained model (ImageNet)
 
-    for layer in base_model.layers:
-        layer.trainable=False
+    # Atm all layers trainable -> Test with only base layers untrainable 
+    #for layer in base_model.layers:
+    #    layer.trainable=False
 
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
