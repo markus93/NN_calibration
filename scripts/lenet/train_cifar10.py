@@ -16,6 +16,7 @@ iterations    = 45000 // batch_size
 num_classes   = 10
 weight_decay  = 0.0001
 seed = 333
+N = 3
 
 log_filepath  = './lenet_dp_da_wd'
 
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
 
     # build network
-    model = build_model(n=2, num_classes = num_classes)
+    model = build_model(n=N, num_classes = num_classes)
     print(model.summary())
 
     # set callback

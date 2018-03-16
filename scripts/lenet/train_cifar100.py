@@ -16,6 +16,7 @@ iterations    = 45000 // batch_size
 num_classes   = 100
 weight_decay  = 0.0001
 seed = 333
+N = 3
 
 
 def build_model(n=1, num_classes = 10):
@@ -59,7 +60,7 @@ def color_preprocessing(x_train,x_test):
 if __name__ == '__main__':
 
     # load data
-    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
     x_train, x_test = color_preprocessing(x_train, x_test)
     
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
@@ -71,7 +72,7 @@ if __name__ == '__main__':
 
 
     # build network
-    model = build_model(n=2, num_classes = num_classes)
+    model = build_model(n=N, num_classes = num_classes)
     print(model.summary())
 
     # set callback

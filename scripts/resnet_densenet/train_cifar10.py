@@ -100,7 +100,7 @@ hist = model.fit_generator(img_gen.flow(x_train45, y_train45, batch_size=batch_s
 model.save('weights_densenet_16_8.h5')
 
 print("Get test accuracy:")
-loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
+loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
 print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
 print("Pickle models history")
