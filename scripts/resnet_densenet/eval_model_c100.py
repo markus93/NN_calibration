@@ -29,7 +29,7 @@ img_dim = (img_channels, img_rows, img_cols) if K.image_dim_ordering() == "th" e
 depth = 40
 nb_dense_block = 3
 growth_rate = 12
-nb_filter = -1
+nb_filter = 12
 dropout_rate = 0.0 # 0.0 for data augmentation
 seed = 333
 weight_decay = 0.0001
