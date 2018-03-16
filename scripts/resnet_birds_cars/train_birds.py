@@ -6,7 +6,7 @@ import keras
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import Dense
 from keras.models import Model
-from keras.optimizers import Adam
+from keras.optimizers import SGD
 from keras.preprocessing import image
 import pickle
 from sklearn.model_selection import train_test_split
@@ -21,6 +21,7 @@ BATCH_SIZE = 64
 NR_CLASSES = 200  # Classes for birds
 EPOCHS = 250
 SEED = 333  # Random seed for reproducibility
+LR = 0.0001
 
 MEAN = [103.939, 116.779, 123.68]
 
@@ -77,7 +78,9 @@ if __name__ == "__main__":
 
     model = Model(inputs=base_model.input, outputs=predictions)
     
-    model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+    #Try with SGD, not Adam
+    sgd = SGD(lr=0.0001, momentum=0.9, nesterov=True)
+    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
     checkpointer = ModelCheckpoint('resnet50_birds_best.h5', verbose=1, save_best_only=True)
