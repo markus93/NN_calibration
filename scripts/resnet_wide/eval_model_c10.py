@@ -117,4 +117,5 @@ if __name__ == '__main__':
     img_input = Input(shape=(img_rows,img_cols,img_channels))
     output = wide_residual_network(img_input,num_classes,depth,wide)
     model = Model(img_input, output)
-    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
+    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True, 
+                   pickle_file = "probs_resnet_wide32_c10", x_val = x_val, y_val = y_val)

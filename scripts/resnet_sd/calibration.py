@@ -2,23 +2,29 @@
 from __future__ import division, print_function
 import sklearn.metrics as metrics
 import numpy as np
+import pickle
 
-def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True):
+def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True, pickle_file = None, x_val = None, y_val = None):
     """
     Evaluates the model, in addition calculates the calibration errors
     
-    Args:
+    Parameters:
         model (keras.model): constructed model
         weights (string): path to weights file
-        x_test: (numpy.ndarray) with x_test data (already in right format)
-        y_test: (numpy.ndarray) with y_test data (1-hot vector)
+        x_test: (numpy.ndarray) with test data
+        y_test: (numpy.ndarray) with test data labels
+        verbose: (boolean) print out results or just return these
+        pickle_file: (string) path to pickle probabilities given by model
+        x_test: (numpy.ndarray) with validation data
+        y_test: (numpy.ndarray) with validation data labels
+
         
     Returns:
         (acc, ece, mce): accuracy of model, ECE and MCE (calibration errors)
     """
     
     # First load in the weights
-    model.load_weights(weights_file, by_name=True)
+    model.load_weights(weights_file)
     
     # Next get predictions
     y_probs = model.predict(x_test)
@@ -26,7 +32,9 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
     y_true = y_test
     
     # Find accuracy and error
-    y_true = [ np.where(r==1)[0][0] for r in y_true]  # 1-hot vector back to numeric
+    if y_true.shape[1] > 1:  # If 1-hot representation, get back to numeric   
+        y_true = np.array([[np.where(r==1)[0][0]] for r in y_true]) # Back to np array also
+       
     accuracy = metrics.accuracy_score(y_true, y_preds) * 100
     error = 100 - accuracy
     
@@ -43,7 +51,28 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
         print("Error:", error)
         print("ECE:", ece)
         print("MCE:", mce)
+        
+     
+    # Pickle probabilities for test and validation
+    if pickle_file:
     
+        #Get predictions also for x_val
+        y_probs_val = model.predict(x_val)
+        y_preds_val = np.argmax(y_probs_val, axis=1)
+        
+        # 
+        if y_val.shape[1] > 1:  # If 1-hot representation, get back to numeric   
+            y_val = np.array([[np.where(r==1)[0][0]] for r in y_val])  # Also convert back to np.array
+            
+        if verbose:
+            print("Pickling the probabilities for validation and test.")
+            print("Validation accuracy: ", metrics.accuracy_score(y_val, y_preds_val) * 100)
+            
+        # Write file with pickled data
+        with open(pickle_file + '.p', 'wb') as f:
+            pickle.dump([(y_probs_val, y_val),(y_probs, y_true)], f)
+    
+    # Return the basic results
     return (accuracy, ece, mce)
 
 

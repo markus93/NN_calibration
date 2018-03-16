@@ -140,20 +140,20 @@ if __name__ == '__main__':
 
 
     # data
-    (X_train, Y_train), (X_test, y_test) = cifar10.load_data()
-    X_train = np.transpose(X_train.astype('float32'), (0, 3, 1, 2))  # Channels first
-    X_test = np.transpose(X_test.astype('float32'), (0, 3, 1, 2))  # Channels first
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    x_train = np.transpose(x_train.astype('float32'), (0, 3, 1, 2))  # Channels first
+    x_test = np.transpose(x_test.astype('float32'), (0, 3, 1, 2))  # Channels first
 
     
     # Data splitting (get additional 5k validation set)
     # Sklearn to split
-    X_train45, x_val, Y_train45, y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=seed)  # random_state = seed
+    x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
-    img_mean = X_train45.mean(axis=0)  # per-pixel mean
-    img_std = X_train45.std(axis=0)
-    X_train45 = (X_train45-img_mean)/img_std
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_std = x_train45.std(axis=0)
+    x_train45 = (x_train45-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
-    X_test = (X_test-img_mean)/img_std
+    x_test = (x_test-img_mean)/img_std
 
 
     img_gen = ImageDataGenerator(
@@ -165,8 +165,8 @@ if __name__ == '__main__':
         cval = 0
     )
 
-    img_gen.fit(X_train45)
-    Y_train45 = np_utils.to_categorical(Y_train45, nb_classes)  # 1-hot vector
+    img_gen.fit(x_train45)
+    y_train45 = np_utils.to_categorical(y_train45, nb_classes)  # 1-hot vector
     y_val = np_utils.to_categorical(y_val, nb_classes)
     y_test = np_utils.to_categorical(y_test, nb_classes)
     
@@ -186,8 +186,8 @@ if __name__ == '__main__':
     for i in gates:
         print(K.get_value(gates[i][1]), gates[i][0],i)
 
-    hist = model.fit_generator(img_gen.flow(X_train45, Y_train45, batch_size=batch_size, shuffle=True),
-                    steps_per_epoch=len(X_train45) // batch_size,
+    hist = model.fit_generator(img_gen.flow(x_train45, y_train45, batch_size=batch_size, shuffle=True),
+                    steps_per_epoch=len(x_train45) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,
                     validation_data = (x_val, y_val),
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     # For evaluation should load model without gates?
 
     print("Get test accuracy:")
-    loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
     
     print("Pickle models history")

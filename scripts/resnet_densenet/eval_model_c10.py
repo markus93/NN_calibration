@@ -73,4 +73,5 @@ if __name__ == '__main__':
     y_train45 = np_utils.to_categorical(y_train45, nb_classes10)  # 1-hot vector
     y_val = np_utils.to_categorical(y_val, nb_classes10)
     y_test = np_utils.to_categorical(y_test, nb_classes10)
-    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True)
+    evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True, 
+                   pickle_file = "probs_densenet40_c10", x_val = x_val, y_val = y_val)
