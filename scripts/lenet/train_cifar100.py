@@ -16,7 +16,7 @@ iterations    = 45000 // batch_size
 num_classes   = 100
 weight_decay  = 0.0001
 seed = 333
-N = 3
+N = 4
 
 
 def build_model(n=1, num_classes = 10):
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     model.save('lenet_c100.h5')
     
     print("Get test accuracy:")
-    loss, accuracy = resnet.evaluate(x_test, y_test, verbose=0)
+    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
 
     print("Pickle models history")

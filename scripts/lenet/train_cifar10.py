@@ -16,7 +16,7 @@ iterations    = 45000 // batch_size
 num_classes   = 10
 weight_decay  = 0.0001
 seed = 333
-N = 3
+N = 4
 
 log_filepath  = './lenet_dp_da_wd'
 
