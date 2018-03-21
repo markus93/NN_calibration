@@ -73,6 +73,7 @@ def load_data_imagenet(size = (256, 256), size_crop = (224, 224)):
 
     path = DATA_PATH
     val_imgs = [f for f in listdir(path) if isfile(join(path, f))]
+    val_imgs = sorted(val_imgs)
     len_val = len(val_imgs)
 
     # Fill in x_train array with train data
