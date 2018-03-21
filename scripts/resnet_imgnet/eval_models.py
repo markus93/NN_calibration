@@ -34,16 +34,19 @@ if __name__ == '__main__':
     print("Preprocess data.")
     
     x_test = x_test[..., ::-1]
+    x_val = x_val[..., ::-1]
     
     for i in range(3):
         x_test[:,:,:,i] -= MEAN[i]
+        x_val[:,:,:,i] -= MEAN[i]
 
     model = resnet152_model()
     sgd = SGD(lr=1e-2, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     print("Start evaluation!")
-    evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True)
+    evaluate_model(model, weights_file_resnet, x_test, y_test, bins = 15, verbose = True, 
+                   pickle_file = "probs_resnet152_imgnet", x_val = x_val, y_val = y_val)
     
 
     print("Evaluate DenseNet161")
@@ -55,10 +58,12 @@ if __name__ == '__main__':
 
     # Subtract mean pixel and multiple by scaling constant # pixel mean subtracted previously
     # Reference: https://github.com/shicai/DenseNet-Caffe
-    x_test[:,:,:,0] = x_test[:,:,:,0] * 0.017
-    x_test[:,:,:,1] = x_test[:,:,:,1] * 0.017
-    x_test[:,:,:,2] = x_test[:,:,:,2] * 0.017
+    
+    for i in range(3):
+        x_test[:,:,:,i] = x_test[:,:,:,i] * 0.017
+        x_val[:,:,:,i] = x_val[:,:,:,i] * 0.017
     
     print("Evaluation for second model.")
-    evaluate_model(model, weights_file_densenet, x_test, y_test, bins = 15, verbose = True)
+    evaluate_model(model, weights_file_densenet, x_test, y_test, bins = 15, verbose = True, 
+                   pickle_file = "probs_densenet161_imgnet", x_val = x_val, y_val = y_val)
 
