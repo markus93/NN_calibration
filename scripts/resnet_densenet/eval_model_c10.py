@@ -13,8 +13,12 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler
 from keras import backend as K
 from sklearn.model_selection import train_test_split
-from calibration import evaluate_model
 
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
 
 batch_size = 64
 nb_classes10 = 10

@@ -40,7 +40,11 @@ from resnet import (
     residual_block
 )
 
-from calibration import evaluate_model
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
 
 # constants
 learning_rate = 0.1

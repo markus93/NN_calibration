@@ -7,10 +7,14 @@ from densenet161 import DenseNet
 from load_data_imagenet import load_data_imagenet_split
 from resnet152 import resnet152_model
 import keras
-from calibration import evaluate_model
+
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
 
 # Constants
-
 MEAN = [103.939, 116.779, 123.68]
 
 if __name__ == '__main__':

@@ -11,7 +11,12 @@ from keras import optimizers
 from keras import regularizers
 from sklearn.model_selection import train_test_split
 import pickle
-from calibration import evaluate_model
+
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
 
 
 depth              = 16

@@ -103,3 +103,4 @@ data/
 models/
 *.jpg
 scripts/resnet_imgnet/test_img/
+*.p

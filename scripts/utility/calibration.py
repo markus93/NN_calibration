@@ -3,7 +3,9 @@ from __future__ import division, print_function
 import sklearn.metrics as metrics
 import numpy as np
 import pickle
+import keras
 
+    
 def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True, pickle_file = None, x_val = None, y_val = None):
     """
     Evaluates the model, in addition calculates the calibration errors
@@ -23,11 +25,19 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
         (acc, ece, mce): accuracy of model, ECE and MCE (calibration errors)
     """
     
+    # Change last activation to linear (instead of softmax)
+    last_layer = model.layers.pop()
+    last_layer.activation = keras.activations.linear
+    i = model.input
+    o = last_layer(model.layers[-1].output)
+    model = keras.models.Model(inputs=i, outputs=[o])
+    
     # First load in the weights
     model.load_weights(weights_file)
     
     # Next get predictions
-    y_probs = model.predict(x_test)
+    y_logits = model.predict(x_test, verbose=1)
+    y_probs = softmax(y_logits)
     y_preds = np.argmax(y_probs, axis=1)
     y_true = y_test
     
@@ -57,7 +67,8 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
     if pickle_file:
     
         #Get predictions also for x_val
-        y_probs_val = model.predict(x_val)
+        y_logits_val = model.predict(x_val)
+        y_probs_val = softmax(y_logits_val)
         y_preds_val = np.argmax(y_probs_val, axis=1)
         
         # 
@@ -69,13 +80,25 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
             print("Validation accuracy: ", metrics.accuracy_score(y_val, y_preds_val) * 100)
             
         # Write file with pickled data
-        with open(pickle_file + '.p', 'wb') as f:
-            pickle.dump([(y_probs_val, y_val),(y_probs, y_true)], f)
+        with open(pickle_file + '_logits.p', 'wb') as f:
+            pickle.dump([(y_logits_val, y_val),(y_logits, y_true)], f)
     
     # Return the basic results
     return (accuracy, ece, mce)
 
 
+def softmax(x):
+    """
+    Compute softmax values for each sets of scores in x.
+    
+    Parameters:
+        x (numpy.ndarray): array containing m samples with n-dimensions (m,n)
+    Returns:
+        x_softmax (numpy.ndarray) softmaxed values for initial (m,n) array
+    """
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum(axis=1, keepdims=1)
+    
 
 def compute_acc_bin(conf_thresh_lower, conf_thresh_upper, conf, pred, true):
     """

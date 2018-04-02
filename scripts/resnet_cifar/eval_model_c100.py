@@ -11,8 +11,12 @@ from keras.models import Model
 from keras import optimizers, regularizers
 from sklearn.model_selection import train_test_split
 import pickle
-from calibration import evaluate_model
 
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
 
 stack_n            = 18            
 num_classes10      = 10
