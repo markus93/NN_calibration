@@ -34,6 +34,7 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
     
     # First load in the weights
     model.load_weights(weights_file)
+    model.compile("sgd", "mse")
     
     # Next get predictions
     y_logits = model.predict(x_test, verbose=1)
