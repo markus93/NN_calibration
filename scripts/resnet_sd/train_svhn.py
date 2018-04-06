@@ -26,14 +26,11 @@ if __name__ == '__main__':
 
     # constants
     learning_rate = 0.1
-    img_rows, img_cols = 32, 32
-    img_channels = 3
     nb_epochs = 50
     batch_size = 128
     nb_classes = 10
     seed = 333
-    layers = 152
-    n = 25  # (layers - 2)//6
+    layers = 152 # n = 25 (152-2)/6
 
 
     # data
@@ -56,8 +53,9 @@ if __name__ == '__main__':
     
         
     # building and training net
-    model = resnet_sd_model(n = n, nr_classes=nb_classes)  # n = 25, nr_classes = 10
-    sgd = SGD(lr=0.1, weight_decay = 1e-4, momentum=0.9, nesterov=True)
+    model = resnet_sd_model(img_shape = (32,32), img_channels = 3, 
+                            layers = layers, nb_classes = nb_classes, verbose = True)
+                            sgd = SGD(lr=0.1, weight_decay = 1e-4, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
 
     print("Model compiled")
