@@ -46,6 +46,13 @@ if __name__ == '__main__':
     x_train = (x_train-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
     x_test = (x_test-img_mean)/img_std
+    
+    # Try with ImageDataGenerator, otherwise it takes massive amount of memory
+    img_gen = ImageDataGenerator(
+        data_format="channels_last"
+    )
+
+    img_gen.fit(x_train)
 
 
     y_train = np_utils.to_categorical(y_train, nb_classes)  # 1-hot vector
@@ -56,15 +63,12 @@ if __name__ == '__main__':
     # building and training net
     model = resnet_sd_model(img_shape = (32,32), img_channels = 3, 
                             layers = layers, nb_classes = nb_classes, verbose = True)
-    sgd = SGD(lr=0.1, weight_decay = 1e-4, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.1, decay=1e-4, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
 
     print("Model compiled")
 
-    for i in gates:
-        print(K.get_value(gates[i][1]), gates[i][0],i)
-
-    hist = model.fit(x=x_train, y=y_train, shuffle=True,
+    hist = model.fit_generator(img_gen.flow(x_train, y_train, batch_size=batch_size, shuffle=True),
                     steps_per_epoch=len(x_train) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,

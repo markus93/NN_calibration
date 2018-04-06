@@ -57,6 +57,7 @@ if __name__ == '__main__':
     )
 
     img_gen.fit(x_train45)
+    
     y_train45 = np_utils.to_categorical(y_train45, nb_classes)  # 1-hot vector
     y_val = np_utils.to_categorical(y_val, nb_classes)
     y_test = np_utils.to_categorical(y_test, nb_classes)
