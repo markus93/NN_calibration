@@ -10,6 +10,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 from keras.callbacks import LearningRateScheduler
 from load_data_svhn import load_data_svhn
+from resnet_sd import resnet_sd_model
 
 
 # Callbacks for updating gates and learning rate
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     # building and training net
     model = resnet_sd_model(img_shape = (32,32), img_channels = 3, 
                             layers = layers, nb_classes = nb_classes, verbose = True)
-                            sgd = SGD(lr=0.1, weight_decay = 1e-4, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.1, weight_decay = 1e-4, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
 
     print("Model compiled")
