@@ -47,13 +47,15 @@ def scheduler(epoch):
         return 0.002
     return 0.0004
     
-def color_preprocessing(x_train, x_val, x_test):
+# Per channel mean and std normalization
+def color_preprocess(x_train, x_val, x_test):
+    
     x_train = x_train.astype('float32')
     x_val = x_val.astype('float32')    
     x_test = x_test.astype('float32')
     
-    mean = np.mean(x_train, axis=0, keepdims=True)
-    std = np.std(x_train)
+    mean = np.mean(x_train, axis=(0,1,2))  # Per channel mean
+    std = np.std(x_train, axis=(0,1,2))
     x_train = (x_train - mean) / std
     x_val = (x_val - mean) / std
     x_test = (x_test - mean) / std
@@ -66,7 +68,6 @@ if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = cifar100.load_data()
     
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-
     x_train45, x_val, x_test = color_preprocessing(x_train45, x_val, x_test)
     
     y_train45 = keras.utils.to_categorical(y_train45, num_classes)

@@ -22,6 +22,22 @@ def lr_sch(epoch):
         return 0.001
 
 
+# Per channel mean and std normalization
+def color_preprocess(x_train, x_val, x_test):
+    
+    x_train = x_train.astype('float32')
+    x_val = x_val.astype('float32')    
+    x_test = x_test.astype('float32')
+    
+    mean = np.mean(x_train, axis=(0,1,2))  # Per channel mean
+    std = np.std(x_train, axis=(0,1,2))
+    x_train = (x_train - mean) / std
+    x_val = (x_val - mean) / std
+    x_test = (x_test - mean) / std
+    
+    return x_train, x_val, x_test        
+        
+        
 
 if __name__ == '__main__':
 
@@ -41,14 +57,7 @@ if __name__ == '__main__':
     # Data splitting (get additional 5k validation set)
     # Sklearn to split
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-
-    # Mean per channel
-    mean = np.mean(x_train45, axis=0, keepdims=True)
-    print("Mean shape:", mean.shape)
-    std = np.std(x_train45)
-    x_train45 = (x_train45 - mean) / std
-    x_val = (x_val -  mean) / std
-    x_test = (x_test - mean) / std
+    x_train45, x_val, x_test = color_preprocessing(x_train45, x_val, x_test)  # Mean per channel    
 
 
     img_gen = ImageDataGenerator(
