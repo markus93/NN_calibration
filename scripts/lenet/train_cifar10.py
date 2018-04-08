@@ -49,7 +49,7 @@ def scheduler(epoch):
         return 0.002
     return 0.0004
     
-def color_preprocess(x_train, x_val, x_test):
+def color_preprocessing(x_train, x_val, x_test):
     
     x_train = x_train.astype('float32')
     x_val = x_val.astype('float32')    

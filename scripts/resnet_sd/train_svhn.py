@@ -24,7 +24,7 @@ def scheduler(epoch):
     
     
 # Per channel mean and std normalization
-def color_preprocess(x_train, x_test):
+def color_preprocessing(x_train, x_test):
     
     x_train = x_train.astype('float32')
     x_val = x_val.astype('float32')    
