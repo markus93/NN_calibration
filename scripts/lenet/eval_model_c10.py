@@ -23,7 +23,7 @@ num_classes10   = 10
 num_classes100 = 100
 weight_decay  = 0.0001
 seed = 333
-N = 4
+N = 1
 
 weights_file_10 = "../../models/lenet_c10.h5"
 weights_file_100 = "../../models/lenet_c100.h5"
@@ -84,7 +84,6 @@ if __name__ == '__main__':
 
 
     # build network
-    N = 4
     model = build_model(n = N, num_classes = num_classes10)
     evaluate_model(model, weights_file_10, x_test, y_test, bins = 15, verbose = True, 
                    pickle_file = "probs_lenet5_c10", x_val = x_val, y_val = y_val)

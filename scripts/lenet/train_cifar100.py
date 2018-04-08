@@ -16,7 +16,8 @@ iterations    = 45000 // batch_size
 num_classes   = 100
 weight_decay  = 0.0001
 seed = 333
-N = 4
+N = 1
+print("N:", N)
 
 
 def build_model(n=1, num_classes = 10):
@@ -46,25 +47,27 @@ def scheduler(epoch):
         return 0.002
     return 0.0004
     
-def color_preprocessing(x_train,x_test):
+def color_preprocessing(x_train, x_val, x_test):
     x_train = x_train.astype('float32')
+    x_val = x_val.astype('float32')    
     x_test = x_test.astype('float32')
-    mean = [125.307, 122.95, 113.865]
-    std  = [62.9932, 62.0887, 66.7048]
-    for i in range(3):
-        x_train[:,:,:,i] = (x_train[:,:,:,i] - mean[i]) / std[i]
-        x_test[:,:,:,i] = (x_test[:,:,:,i] - mean[i]) / std[i]
-
-    return x_train, x_test
+    
+    mean = np.mean(x_train, axis=0, keepdims=True)
+    std = np.std(x_train)
+    x_train = (x_train - mean) / std
+    x_val = (x_val - mean) / std
+    x_test = (x_test - mean) / std
+    
+    return x_train, x_val, x_test
 
 if __name__ == '__main__':
 
     # load data
     (x_train, y_train), (x_test, y_test) = cifar100.load_data()
-    x_train, x_test = color_preprocessing(x_train, x_test)
     
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
 
+    x_train45, x_val, x_test = color_preprocessing(x_train45, x_val, x_test)
     
     y_train45 = keras.utils.to_categorical(y_train45, num_classes)
     y_val = keras.utils.to_categorical(y_val, num_classes)
