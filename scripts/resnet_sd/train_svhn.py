@@ -40,12 +40,13 @@ if __name__ == '__main__':
     print(x_train.shape)
     print("Data loaded")
     
-    # Simple preprocessing - subtract mean and divide by standard division
-    img_mean = x_train.mean(axis=0)  # per-pixel mean
-    img_std = x_train.std(axis=0)
-    x_train = (x_train-img_mean)/img_std
-    x_val = (x_val-img_mean)/img_std
-    x_test = (x_test-img_mean)/img_std
+    # We preprocess the data by subtracting the mean and dividing the standard deviation.
+    mean = np.mean(x_train, axis=0, keepdims=True)
+    print("Mean shape:", mean.shape)
+    std = np.std(x_train)
+    x_train = (x_train - mean) / std
+    x_val = (x_val -  mean) / std
+    x_test = (x_test - mean) / std
     
     # Try with ImageDataGenerator, otherwise it takes massive amount of memory
     img_gen = ImageDataGenerator(
