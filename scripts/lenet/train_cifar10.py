@@ -1,3 +1,5 @@
+#Code base from https://github.com/BIGBALLON/cifar-10-cnn/blob/master/1_Lecun_Network/LeNet_dp_da_wd_keras.py 
+
 import keras
 import numpy as np
 from keras import optimizers
@@ -28,7 +30,7 @@ def build_model(n=1, num_classes = 10):
         n: (int) scaling for model (n times filters in Conv2D and nodes in Dense)
     """
     model = Sequential()
-    model.add(Conv2D(n*12, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
+    model.add(Conv2D(n*6, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
     model.add(Conv2D(n*16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
