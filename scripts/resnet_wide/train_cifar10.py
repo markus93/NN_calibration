@@ -75,7 +75,7 @@ model = wrn.create_wide_residual_network(init_shape, nb_classes=nb_classes, N=2,
 model.summary()
 #plot_model(model, "WRN-16-8.png", show_shapes=False)
 
-sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # dampening = 0.9?
+sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)
 model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["acc"])
 print("Finished compiling")
 

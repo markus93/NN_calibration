@@ -11,6 +11,7 @@ from keras.engine import Input, Model
 from keras.optimizers import SGD
 from keras.callbacks import Callback, LearningRateScheduler, ModelCheckpoint, EarlyStopping
 from keras.preprocessing.image import ImageDataGenerator
+from keras.regularizers import l2
 from keras.utils import np_utils
 import keras.backend as K
 import json
@@ -47,7 +48,7 @@ def _stochastic_survival(y, p_survival=1.0):
                            survival * y)
 
 
-def _stochastic_depth_residual_block(x, nb_filters=16, block=0, nb_total_blocks=110, subsample_factor=1):
+def _stochastic_depth_residual_block(x, nb_filters=16, block=0, nb_total_blocks=110, subsample_factor=1, weight_decay = 0.0001):
     """
     Stochastic depth paper: http://arxiv.org/pdf/1603.09382v1.pdf
     
@@ -80,12 +81,14 @@ def _stochastic_depth_residual_block(x, nb_filters=16, block=0, nb_total_blocks=
 
     y = Convolution2D(nb_filters, (3, 3), strides=subsample, 
                       padding="same", data_format="channels_last", 
-                      kernel_initializer="he_normal")(x)
+                      kernel_initializer="he_normal",
+                      kernel_regularizer=l2(weight_decay))(x)
     y = BatchNormalization(axis=3)(y)
     y = Activation('relu')(y)
     y = Convolution2D(nb_filters, (3, 3), strides=(1, 1), 
                       padding="same", data_format="channels_last", 
-                      kernel_initializer="he_normal")(y)
+                      kernel_initializer="he_normal",
+                      kernel_regularizer=l2(weight_decay))(y)
     y = BatchNormalization(axis=3)(y)
     
     p_survival = _get_p_survival(block=block, nb_total_blocks=nb_total_blocks, p_survival_end=0.5, mode='linear_decay')
@@ -95,7 +98,7 @@ def _stochastic_depth_residual_block(x, nb_filters=16, block=0, nb_total_blocks=
 
     return out
 
-def resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_classes = 10, verbose = False):
+def resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_classes = 10, verbose = False, weight_decay = 0.0001):
 
     start_time = time.time()  # Take time
 
@@ -109,7 +112,7 @@ def resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_clas
 
     # Create model
     x = Convolution2D(16, (3, 3), padding="same", data_format="channels_last", 
-                      kernel_initializer="he_normal")(inputs)
+                      kernel_initializer="he_normal", kernel_regularizer=l2(weight_decay))(inputs)
     x = BatchNormalization(axis=3)(x)
     x = Activation('relu')(x)
 
@@ -129,7 +132,7 @@ def resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_clas
             subsample_factor = 1
         x = _stochastic_depth_residual_block(x, nb_filters=nb_filters, 
                                             block=blocks_per_group + i, nb_total_blocks=3 * blocks_per_group, 
-                                            subsample_factor=subsample_factor)
+                                            subsample_factor=subsample_factor, weight_decay = weight_decay)
     # 3rd group
     for i in range(0, blocks_per_group):
         nb_filters = 64
@@ -139,7 +142,7 @@ def resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_clas
             subsample_factor = 1
         x = _stochastic_depth_residual_block(x, nb_filters=nb_filters, 
                                             block=2 * blocks_per_group + i, nb_total_blocks=3 * blocks_per_group, 
-                                            subsample_factor=subsample_factor)
+                                            subsample_factor=subsample_factor, weight_decay = weight_decay)
 
     x = AveragePooling2D(pool_size=(8, 8), strides=None, padding='valid', data_format="channels_last")(x)
     x = Flatten()(x)
@@ -170,6 +173,7 @@ if __name__ == "__main__":
     batch_size = 128
     nb_epoch = 200    
     nb_classes = 10
+    weight_decay = 0.0001
 
     # the data, shuffled and split between train and test sets
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -192,7 +196,7 @@ if __name__ == "__main__":
     # Learning rate scheduler callback
     lr_scheduler = LearningRateScheduler(lr_sch)
     
-    model = resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_classes = 10, verbose = True)
+    model = resnet_sd_model(img_shape = (32,32), img_channels = 3, layers = 110, nb_classes = 10, verbose = True, weight_decay = weight_decay)
 
     # Model saving callback
     #checkpointer = ModelCheckpoint(filepath='stochastic_depth_cifar10.hdf5', verbose=1, save_best_only=True)
