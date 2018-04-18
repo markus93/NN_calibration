@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # building and training net
     model = resnet_sd_model(img_shape = (32,32), img_channels = 3, 
                             layers = layers, nb_classes = nb_classes, verbose = True)
-    sgd = SGD(lr=0.1, decay=1e-4, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.1, momentum=0.9, nesterov=True)  # Removed decay here and added to kernel_regularization
     model.compile(optimizer=sgd, loss="categorical_crossentropy",metrics=["accuracy"])  
 
     print("Model compiled")

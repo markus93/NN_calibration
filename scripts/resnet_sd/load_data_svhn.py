@@ -75,8 +75,8 @@ def load_data_svhn(seed = None):
 
 
     # Split DATA
-    x_train1, x_val1, y_train1, y_val1 = train_val_split_count(x_train, y_train, size = 200, seed = seed)
-    x_extra2, x_val2, y_extra2, y_val2 = train_val_split_count(x_extra, y_extra, size = 400, seed = seed)
+    x_train1, x_val1, y_train1, y_val1 = train_val_split_count(x_train, y_train, size = 400, seed = seed)
+    x_extra2, x_val2, y_extra2, y_val2 = train_val_split_count(x_extra, y_extra, size = 200, seed = seed)
 
 
     # Add together train and extra data
