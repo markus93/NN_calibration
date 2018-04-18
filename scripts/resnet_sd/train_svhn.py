@@ -24,7 +24,7 @@ def scheduler(epoch):
     
     
 # Per channel mean and std normalization
-def color_preprocessing(x_train, x_test):
+def color_preprocessing(x_train, x_val, x_test):
     
     x_train = x_train.astype('float32')
     x_val = x_val.astype('float32')    
@@ -33,6 +33,7 @@ def color_preprocessing(x_train, x_test):
     mean = np.mean(x_train, axis=(0,1,2))  # Per channel mean
     std = np.std(x_train, axis=(0,1,2))
     x_train = (x_train - mean) / std
+    x_val = (x_val - mean) / std
     x_test = (x_test - mean) / std
     
     return x_train, x_test
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     print(x_train.shape)
     print("Data loaded")
     
-    x_train, x_test = color_preprocessing(x_train, x_test)  # Per channel mean
+    x_train, x_test = color_preprocessing(x_train, x_val, x_test)  # Per channel mean
 
     
     # Try with ImageDataGenerator, otherwise it takes massive amount of memory
@@ -89,8 +90,6 @@ if __name__ == '__main__':
     model.save_weights('model_weight_ep50_152SD_svhn.hdf5')
     
     
-    # For evaluation should load model with pL = 1
-
     print("Get test accuracy:")
     loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Test: accuracy1 = %f  ;  loss1 = %f" % (accuracy, loss))
