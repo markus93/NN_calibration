@@ -5,6 +5,7 @@ import pickle
 from resnet_sd import resnet_sd_model
 from sklearn.model_selection import train_test_split
 from keras.models import Model
+from keras.callbacks import ModelCheckpoint
 from keras.optimizers import SGD
 from keras.datasets import cifar100
 from keras.utils import np_utils
@@ -90,12 +91,14 @@ if __name__ == '__main__':
     model.compile(optimizer=sgd, loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
+    checkpointer = ModelCheckpoint('model_resnet110SD_c100_best.hdf5', verbose=1, save_best_only=True)
+                  
     hist = model.fit_generator(img_gen.flow(x_train45, y_train45, batch_size=batch_size, shuffle=True),
                     steps_per_epoch=len(x_train45) // batch_size,
                     validation_steps=len(x_val) // batch_size,
                     epochs=nb_epochs,
                     validation_data = (x_val, y_val),
-                    callbacks=[LearningRateScheduler(lr_sch)])
+                    callbacks=[LearningRateScheduler(lr_sch), checkpointer])
 
     model.save_weights('model_weight_ep500_110SD_cifar_100.hdf5')
     
