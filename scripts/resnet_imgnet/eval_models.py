@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     print("Preprocess data.")
     
-    x_test = x_test[..., ::-1]
+    x_test = x_test[..., ::-1]  # What this does? Changes the order of last layer - RGB to BGR
     x_val = x_val[..., ::-1]
     
     for i in range(3):

@@ -9,23 +9,30 @@ LABELS_PATH = '../../data/data_imagenet/labels.txt'
 DATA_PATH = '../../data/data_imagenet/val/'
 IMG_MEAN = [103.939, 116.779, 123.68]  # Mean to subtract from image, used it later, in training script
 
-# TODO find pre-calculated means and std
 
 # Load in images
-def load_img(path, size = (256, 256)):
+def load_img(path, new_size = 256):
 
     """
     Loads in single resized image as array
     
     Args:
         path (string) : path to image file (with extention)
-        size (int, int) : size of initial image after resize
+        size (int, int) : size of the shorter dimension
 
     Returns:
         rgb_im (numpy.ndarray): resized image as an array
     """
 
     im = Image.open(path)
+    
+    if im.size[0] < im.size[1]:
+        size_perc = new_size/im.size[0]
+    else:
+        size_perc = new_size/im.size[1]
+        
+    size = (int(round(im.size[0]*size_perc, 0)), int(round(im.size[1]*size_perc, 0))) # New size of the image
+
     im = im.resize(size, Image.ANTIALIAS)
     rgb_im = im.convert('RGB')  # Some imageses are in Grayscale
     return np.array(rgb_im, dtype="float32")
@@ -50,7 +57,7 @@ def center_crop(img_mat, size = (224, 224)):
     return img_mat[start_w:start_w+size[0],start_h:start_h+size[1], :]
 
 
-def load_data_imagenet(size = (256, 256), size_crop = (224, 224)):
+def load_data_imagenet(size = 256, size_crop = (224, 224)):
 
     """
     Load imagenet validation data and labels
@@ -81,13 +88,13 @@ def load_data_imagenet(size = (256, 256), size_crop = (224, 224)):
     x_val = np.empty((len_val, size_crop[0], size_crop[1], 3), dtype="float32")
 
     for i, img_path in enumerate(val_imgs):
-        img_mat = load_img(DATA_PATH + img_path, size = size)
+        img_mat = load_img(DATA_PATH + img_path, new_size = size)
         x_val[i] = center_crop(img_mat, size = size_crop)  # Crop center of the image
 
     return (x_val, y_val)
     
 
-def load_data_imagenet_split(size = (256, 256), size_crop = (224, 224), seed = 333):
+def load_data_imagenet_split(size = 256, size_crop = (224, 224), seed = 333):
 
     """
     Load imagenet validation data and split it into test and validation. In addition subtract mean from each image
