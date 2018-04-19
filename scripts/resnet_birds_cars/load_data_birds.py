@@ -16,13 +16,25 @@ TRAIN_TEST_SPLIT_PATH = '../../data/data_birds/CUB_200_2011/train_test_split.txt
 DATA_PATH = '../../data/data_birds/CUB_200_2011/images/'
 
 
-# Load in images
-def load_img(path, size = (256, 256)):
+def load_img(path, new_size = 256):
+    """
+    Loads in an images, so its sorter side will match to new side
+    
+    params:
+        path: (string) location to the image
+        new_size: (int) the new size of the image
+    """
     im = Image.open(path)
+    if im.size[0] < im.size[1]:
+        size_perc = new_size/im.size[0]
+    else:
+        size_perc = new_size/im.size[1]
+        
+    size = (int(round(im.size[0]*size_perc, 0)), int(round(im.size[1]*size_perc, 0))) # New size of the image
+
     im = im.resize(size, Image.ANTIALIAS)
     rgb_im = im.convert('RGB')  # Some imageses are in Grayscale
-    return np.array(rgb_im)
-
+    return np.array(rgb_im, dtype="float32")
     
 # Get center of image array
 def center_crop(img_mat, size = (224, 224)):
@@ -34,7 +46,7 @@ def center_crop(img_mat, size = (224, 224)):
     
 # Load in all the Birds Data set images as an numpy array.
     # Returns: ((x_train, y_train), (x_test, y_test))
-def load_data_birds(size = (256, 256), size_crop = (224, 224)):
+def load_data_birds(size = 256, size_crop = (224, 224)):
 
 
     # ### Get test and train labels
@@ -82,19 +94,24 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
 
 
     # Split train and test images
-    train_imgs = imgs[train_idxs]
-    test_imgs = imgs[test_idxs]
+    if len(imgs) < 200:
+        train_imgs = imgs[:len(imgs)//2]
+        test_imgs = imgs[len(imgs)//2:]
+    else:    
+        train_imgs = imgs[train_idxs]
+        test_imgs = imgs[test_idxs]
 
 
     # Fill in x_train array with train data
     len_train = len(train_imgs)
     # Init numpy array
-    x_train = np.empty((len_train, size[0], size[1], 3), dtype="float32")
+    x_train = []
 
     # Load train images into numpy array
     for i, img_path in enumerate(train_imgs):
-        x_train[i] = load_img(img_path, size = size)
+        x_train.append(load_img(img_path, new_size = size))
 
+    x_train = np.asarray(x_train)
 
     # ###Fill in x_test array with test data
 
@@ -104,7 +121,7 @@ def load_data_birds(size = (256, 256), size_crop = (224, 224)):
 
     # Load in test images into array
     for i, img_path in enumerate(test_imgs):    
-        img_mat = load_img(img_path, size = size)  # First scale to (256,256)
+        img_mat = load_img(img_path, new_size = size)  # First scale to 256-by-x
         x_test[i] = center_crop(img_mat, size = size_crop)  # Crop center of the image
 
 

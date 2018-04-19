@@ -15,7 +15,7 @@ from image_gen_extended import ImageDataGenerator, random_crop
 from keras.layers import GlobalAveragePooling2D, Dense
 from keras.models import Model
 
-SIZE_IMG = (256, 256)
+SIZE_IMG = 256
 SIZE_CROP = (224, 224)
 BATCH_SIZE = 64
 NR_CLASSES = 200  # Classes for birds
@@ -41,15 +41,17 @@ if __name__ == "__main__":
     y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
     #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
-    x_train = x_train[..., ::-1]
-    x_test = x_test[..., ::-1]
     
-    for i in range(3):
-        x_train[:,:,:,i] -= MEAN[i]
-        x_test[:,:,:,i] -= MEAN[i]
+    for idx in range(len(x_train)):
+    
+        x_train[idx] = x_train[idx][..., ::-1]
+        x_test[idx] = x_test[idx][..., ::-1]
+        
+        for i in range(3):
+            x_train[idx][:,:,i] -= MEAN[i]
+            x_test[idx][:,:,i] -= MEAN[i]
     
     x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
-    
     
     
     # set data augmentation
@@ -78,8 +80,8 @@ if __name__ == "__main__":
 
     model = Model(inputs=base_model.input, outputs=predictions)
     
-    #Try with SGD, not Adam
-    sgd = SGD(lr=0.0001, momentum=0.9, nesterov=True)
+    #Try with SGD
+    sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
