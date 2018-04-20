@@ -94,7 +94,7 @@ def load_data_cars(size = 256, size_crop = (224, 224)):
     x_train = []
 
     for i, img_path in enumerate(train_imgs):
-        x_train[i] = load_img(TRAIN_DATA_PATH + img_path, new_size = size)
+        x_train.append(load_img(TRAIN_DATA_PATH + img_path, new_size = size))
 
     x_train = np.asarray(x_train)
 
