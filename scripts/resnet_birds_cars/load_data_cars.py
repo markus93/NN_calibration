@@ -91,12 +91,11 @@ def load_data_cars(size = 256, size_crop = (224, 224)):
 
     # Fill in x_train array with train data
 
-    x_train = []
+    x_train = np.empty((len_train, size, size, 3), dtype="float32")
 
     for i, img_path in enumerate(train_imgs):
-        x_train.append(load_img(TRAIN_DATA_PATH + img_path, new_size = size))
-
-    x_train = np.asarray(x_train)
+        img_mat = load_img(TRAIN_DATA_PATH + img_path, new_size = size)  # First load and rescale image
+        x_train[i] = center_crop(img_mat, size = (size, size))  # Second center crop the scaled image
 
     # Fill in x_test array with test data
     x_test = np.empty((len_test, size_crop[0], size_crop[1], 3), dtype="float32")

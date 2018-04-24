@@ -102,12 +102,13 @@ if __name__ == '__main__':
     
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     
-    img_mean = x_train45.mean(axis=0)  # per-pixel mean
+    img_mean = x_train45.mean(axis=0)  # per-pixel mean, what about std?
     img_std = x_train45.std(axis=0)
     x_train45 = (x_train45-img_mean)/img_std
     x_val = (x_val-img_mean)/img_std
     x_test = (x_test-img_mean)/img_std
 
+    
     # build network
     img_input = Input(shape=(img_rows,img_cols,img_channels))
     output    = residual_network(img_input,num_classes,stack_n)

@@ -40,24 +40,21 @@ if __name__ == "__main__":
     y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
     y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
-    #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
-    for idx in range(len(x_train)):
+    #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)            
+    x_train = x_train[..., ::-1]
+    x_test = x_test[..., ::-1]
     
-        x_train[idx] = x_train[idx][..., ::-1]
-        for i in range(3):
-            x_train[idx][:,:,i] -= MEAN[i]
-        
-    for idx in range(len(x_test)):
-        x_test[idx] = x_test[idx][..., ::-1]
-        for i in range(3):
-            x_test[idx][:,:,i] -= MEAN[i]
+    for i in range(3):
+        x_train[:,:,:,i] -= MEAN[i]
+        x_test[:,:,:,i] -= MEAN[i]
+
     
     x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
     
     
     # set data augmentation
     print('Using real-time data augmentation.')
-    datagen = ImageDataGenerator(horizontal_flip=True,)
+    datagen = ImageDataGenerator(horizontal_flip=True) #rotation_range = 0.1 # TODO try this
     datagen.config['random_crop_size'] = SIZE_CROP
 
     datagen.set_pipeline([random_crop])

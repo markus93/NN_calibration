@@ -16,7 +16,9 @@ from resnet_sd import resnet_sd_model
 # Callbacks for updating gates and learning rate
 def scheduler(epoch):
 
-    if epoch < 30:
+    if epoch < 3:
+        return learning_rate*0.1  # 0.01 # Maybe helps with convergion?
+    elif epoch < 30:
         return learning_rate
     elif epoch < 35:
         return learning_rate*0.1

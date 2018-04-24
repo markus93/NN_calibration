@@ -94,25 +94,22 @@ def load_data_birds(size = 256, size_crop = (224, 224)):
 
 
     # Split train and test images
-    if len(imgs) < 200:
-        train_imgs = imgs[:len(imgs)//2]
-        test_imgs = imgs[len(imgs)//2:]
-    else:    
-        train_imgs = imgs[train_idxs]
-        test_imgs = imgs[test_idxs]
+
+    train_imgs = imgs[train_idxs]
+    test_imgs = imgs[test_idxs]
 
 
     # Fill in x_train array with train data
     len_train = len(train_imgs)
-    # Init numpy array
-    x_train = []
 
+    # Init numpy array
+    x_train = np.empty((len_train, size, size, 3), dtype="float32")
+    
     # Load train images into numpy array
     for i, img_path in enumerate(train_imgs):
-        x_train.append(load_img(img_path, new_size = size))
-
-    x_train = np.asarray(x_train)
-
+        img_mat = load_img(img_path, new_size = size)  # First load and rescale image
+        x_train[i] = center_crop(img_mat, size = (size, size))  # Second center crop the scaled image
+    
     # ###Fill in x_test array with test data
 
     len_test = len(test_imgs)

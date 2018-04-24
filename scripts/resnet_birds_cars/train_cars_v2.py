@@ -67,15 +67,13 @@ if __name__ == "__main__":
     #   layer.trainable=False
 
     x = base_model.output
-    x = GlobalAveragePooling2D()(x)
-    # let's add a fully-connected layer
-    x = Dense(1024, activation='relu')(x)
-    # and a logistic layer -- let's say we have 200 classes
-    predictions = Dense(NR_CLASSES, activation='softmax')(x)
+    x = AveragePooling2D((7, 7), name='avg_pool')(x)
+    x = Flatten()(x)
+    predictions = Dense(NR_CLASSES, activation='softmax', name='fc10')(x)
 
     model = Model(inputs=base_model.input, outputs=predictions)
     
-    sgd = SGD(lr=0.001, decay = 1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
