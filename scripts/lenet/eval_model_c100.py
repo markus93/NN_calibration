@@ -25,8 +25,8 @@ weight_decay  = 0.0001
 seed = 333
 N = 1
 
-weights_file_10 = "../../models/lenet_c10.h5"
-weights_file_100 = "../../models/lenet_c100.h5"
+weights_file_10 = "../../models/lenet_5_c10.h5"
+weights_file_100 = "../../models/lenet_5_c100.h5"
 
 
 def build_model(n=1, num_classes = 10):

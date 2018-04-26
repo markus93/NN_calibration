@@ -57,15 +57,7 @@ if __name__ == '__main__':
     # Sklearn to split
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
     x_train45, x_val, x_test = color_preprocessing(x_train45, x_val, x_test)
-
-    # Mean per channel
-    mean = np.mean(x_train45, axis=0, keepdims=True)
-    print("Mean shape:", mean.shape)
-    std = np.std(x_train45)
-    x_train45 = (x_train45 - mean) / std
-    x_val = (x_val -  mean) / std
-    x_test = (x_test - mean) / std
-
+    
 
     img_gen = ImageDataGenerator(
         horizontal_flip=True,

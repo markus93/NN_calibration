@@ -34,7 +34,7 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
     
     # First load in the weights
     model.load_weights(weights_file)
-    model.compile("sgd", "mse")
+    model.compile(optimizer="sgd", loss="categorical_crossentropy")
     
     # Next get predictions
     y_logits = model.predict(x_test, verbose=1)
@@ -74,7 +74,7 @@ def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = Tru
         
         # 
         if y_val.shape[1] > 1:  # If 1-hot representation, get back to numeric   
-            y_val = np.array([[np.where(r==1)[0][0]] for r in y_val])  # Also convert back to np.array
+            y_val = np.array([[np.where(r==1)[0][0]] for r in y_val])  # Also convert back to np.array, TODO argmax?
             
         if verbose:
             print("Pickling the probabilities for validation and test.")
@@ -177,3 +177,34 @@ def MCE(conf, pred, true, bin_size = 0.1):
         cal_errors.append(np.abs(acc-avg_conf))
         
     return max(cal_errors)
+    
+
+def get_bin_info(conf, pred, true, bin_size = 0.1):
+
+    """
+    Get accuracy, confidence and elements in bin information for all the bins.
+    
+    Args:
+        conf (numpy.ndarray): list of confidences
+        pred (numpy.ndarray): list of predictions
+        true (numpy.ndarray): list of true labels
+        bin_size: (float): size of one bin (0,1)  # TODO should convert to number of bins?
+        
+    Returns:
+        (acc, conf, len_bins): tuple containing all the necessary info for reliability diagrams.
+    """
+    
+    upper_bounds = np.arange(bin_size, 1+bin_size, bin_size)
+    
+    accuracies = []
+    confidences = []
+    bin_lengths = []
+    
+    for conf_thresh in upper_bounds:
+        acc, avg_conf, len_bin = compute_acc_bin(conf_thresh-bin_size, conf_thresh, conf, pred, true)
+        accuracies.append(acc)
+        confidences.append(avg_conf)
+        bin_lengths.append(len_bin)
+        
+        
+    return accuracies, confidences, bin_lengths

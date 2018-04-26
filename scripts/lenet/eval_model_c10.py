@@ -25,8 +25,8 @@ weight_decay  = 0.0001
 seed = 333
 N = 1
 
-weights_file_10 = "../../models/lenet_c10.h5"
-weights_file_100 = "../../models/lenet_c100.h5"
+weights_file_10 = "../../models/lenet_5_c10.h5"
+weights_file_100 = "../../models/lenet_5_c100.h5"
 
 
 def build_model(n=1, num_classes = 10):
@@ -69,18 +69,15 @@ def color_preprocessing(x_train,x_test):
 
 if __name__ == '__main__':
 
-    print("Evaluate CIFAR.10 - LeNet")
+    print("Evaluate CIFAR-10 - LeNet 5")
     # load data
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train, x_test = color_preprocessing(x_train, x_test)
-      
     x_train45, x_val, y_train45, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=seed)  # random_state = seed
-    
 
     y_train45 = keras.utils.to_categorical(y_train45, num_classes10)
     y_val = keras.utils.to_categorical(y_val, num_classes10)
     y_test = keras.utils.to_categorical(y_test, num_classes10)
-
 
 
     # build network
