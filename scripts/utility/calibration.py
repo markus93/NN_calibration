@@ -208,3 +208,4 @@ def get_bin_info(conf, pred, true, bin_size = 0.1):
         
         
     return accuracies, confidences, bin_lengths
+    
