@@ -105,3 +105,4 @@ models/
 scripts/resnet_imgnet/test_img/
 *.p
 betacal_example/
+scripts/resnet_wide/old/
