@@ -13,7 +13,7 @@ from keras import regularizers
 from sklearn.model_selection import train_test_split
 import pickle
 
-depth              = 28
+depth              = 34
 growth_rate        = 10  # Growth factor
 n                  = (depth-4)//6  # N, number of blocks in one group
 num_classes        = 100

@@ -13,7 +13,7 @@ from keras import regularizers
 from sklearn.model_selection import train_test_split
 import pickle
 
-depth              = 28
+depth              = 34  # 32, if ignoring conv layers carrying residuals, which are needed for increasing filter size.
 growth_rate        = 10  # Growth factor
 n                  = (depth-4)//6
 num_classes        = 10
