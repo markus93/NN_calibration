@@ -43,7 +43,7 @@ if __name__ == '__main__':
     batch_size = 128
     nb_classes = 100
     seed = 333
-    weights_file = "../../models/resnet_110_SD_c10.hdf5"
+    weights_file = "../../models/resnet_110_SD_c100.hdf5"
 
 
     # data

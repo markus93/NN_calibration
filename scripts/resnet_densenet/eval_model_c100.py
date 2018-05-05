@@ -39,8 +39,8 @@ seed = 333
 weight_decay = 0.0001
 learning_rate = 0.1
 
-weights_file_10 =  "../../models/weights_densenet_16_8_c10.h5"
-weights_file_100 =  "../../models/weights_densenet_16_8_c100.h5"
+weights_file_10 =  "../../models/weights_densenet_40_c10.h5"
+weights_file_100 =  "../../models/weights_densenet_40_c100.h5"
 
 
 # Preprocessing for DenseNet https://arxiv.org/pdf/1608.06993v3.pdf

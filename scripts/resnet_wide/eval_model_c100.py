@@ -32,8 +32,8 @@ weight_decay       = 0.0005
 log_filepath       = r'./w_resnet/'
 seed = 333
 
-weights_file_10 = "../../models/resnet_wide_16_8_c10.h5"
-weights_file_100 = "../../models/resnet_wide_16_8_c100.h5"
+weights_file_10 = "../../models/resnet_wide_28_10_c10.h5"
+weights_file_100 = "../../models/resnet_wide_28_10_c100.h5"
 
 
 def scheduler(epoch):
