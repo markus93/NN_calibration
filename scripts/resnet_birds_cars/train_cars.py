@@ -75,7 +75,7 @@ if __name__ == "__main__":
     print(model.summary())
 
     
-    sgd = SGD(lr=0.0001, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.0001, decay = 1e-6 momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
