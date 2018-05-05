@@ -12,7 +12,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 from load_data_cars import load_data_cars
 from image_gen_extended import ImageDataGenerator, random_crop
-from keras.layers import GlobalAveragePooling2D, Dense
+from keras.layers import GlobalAveragePooling2D, Dense, Flatten)
 from keras.models import Model
 
 SIZE_IMG = 256
