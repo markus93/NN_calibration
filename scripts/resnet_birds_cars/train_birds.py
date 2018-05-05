@@ -12,7 +12,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 from load_data_birds import load_data_birds
 from image_gen_extended import ImageDataGenerator, random_crop
-from keras.layers import GlobalAveragePooling2D, Dense
+from keras.layers import GlobalAveragePooling2D, Dense, Flatten
 from keras.models import Model
 
 SIZE_IMG = 256
@@ -70,13 +70,15 @@ if __name__ == "__main__":
     #    layer.trainable=False
 
     x = base_model.output
-    x = GlobalAveragePooling2D()(x)
+    #x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
-    x = Dense(1024, activation='relu')(x)
+    #x = Dense(1024, activation='relu')(x)
+    x = Flatten()(x)
     # and a logistic layer -- let's say we have 200 classes
     predictions = Dense(NR_CLASSES, activation='softmax')(x)
 
     model = Model(inputs=base_model.input, outputs=predictions)
+    print(model.summary())
     
     #Try with SGD
     sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)

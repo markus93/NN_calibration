@@ -75,6 +75,6 @@ if __name__ == '__main__':
 
     print("Model compiled")
 
-   evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True, 
+    evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True, 
                    pickle_file = "probs_resnet152_SD_SVHN", x_val = x_val, y_val = y_val)
     

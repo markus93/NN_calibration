@@ -12,7 +12,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 from load_data_cars import load_data_cars
 from image_gen_extended import ImageDataGenerator, random_crop
-from keras.layers import GlobalAveragePooling2D, Dense
+from keras.layers import GlobalAveragePooling2D, Dense, AveragePooling2D, Flatten
 from keras.models import Model
 
 SIZE_IMG = 256
@@ -68,10 +68,11 @@ if __name__ == "__main__":
 
     x = base_model.output
     x = AveragePooling2D((7, 7), name='avg_pool')(x)
-    x = Flatten()(x)
     predictions = Dense(NR_CLASSES, activation='softmax', name='fc10')(x)
 
     model = Model(inputs=base_model.input, outputs=predictions)
+    
+    print(model.summary())
     
     sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
