@@ -14,6 +14,12 @@ from load_data_birds import load_data_birds
 from keras.layers import GlobalAveragePooling2D, Dense
 from keras.models import Model
 
+# Imports to get "utility" package
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
+from utility.calibration import evaluate_model
+
 SIZE_IMG = 256
 SIZE_CROP = (224, 224)
 BATCH_SIZE = 64

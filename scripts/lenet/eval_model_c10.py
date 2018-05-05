@@ -35,7 +35,7 @@ def build_model(n=1, num_classes = 10):
         n: (int) scaling for model (n times filters in Conv2D and nodes in Dense)
     """
     model = Sequential()
-    model.add(Conv2D(n*12, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
+    model.add(Conv2D(n*6, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
     model.add(Conv2D(n*16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
@@ -47,14 +47,6 @@ def build_model(n=1, num_classes = 10):
     model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     return model
 
-def scheduler(epoch):
-    if epoch <= 60:
-        return 0.05
-    if epoch <= 120:
-        return 0.01
-    if epoch <= 160:    
-        return 0.002
-    return 0.0004
     
 def color_preprocessing(x_train,x_test):
     x_train = x_train.astype('float32')
