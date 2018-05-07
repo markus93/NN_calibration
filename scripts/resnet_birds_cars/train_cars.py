@@ -67,9 +67,10 @@ if __name__ == "__main__":
     #   layer.trainable=False
 
     x = base_model.output
-    x = Flatten()(x)
-    # and a logistic layer -- let's say we have 200 classes
-    predictions = Dense(NR_CLASSES, activation='softmax')(x)
+    # and a logistic layer -- let's say we have 196 classes
+    x_fc = AveragePooling2D((7, 7), name='avg_pool')(x)
+    x_fc = Flatten()(x_fc)
+    predictions = Dense(NR_CLASSES, activation='softmax')(x_fc)
 
     model = Model(inputs=base_model.input, outputs=predictions)
     print(model.summary())

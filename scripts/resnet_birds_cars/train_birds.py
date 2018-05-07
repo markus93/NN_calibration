@@ -70,9 +70,10 @@ if __name__ == "__main__":
     #    layer.trainable=False
 
     x = base_model.output
-    #x = GlobalAveragePooling2D()(x)
+    x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
     #x = Dense(1024, activation='relu')(x)
+    x = Flatten()(x)
     # and a logistic layer -- let's say we have 200 classes
     predictions = Dense(NR_CLASSES, activation='softmax')(x)
 

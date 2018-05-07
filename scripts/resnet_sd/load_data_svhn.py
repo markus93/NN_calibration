@@ -84,7 +84,7 @@ def load_data_svhn(seed = None):
     x_train_all = np.concatenate([x_train1, x_extra2])
     y_train_all = np.concatenate([y_train1, y_extra2])
     
-    y_train_all -= 1  # So 0 would be smallest label and 9 biggest, shouldn't be a problem.
+    y_train_all -= 1  # So 0 would be smallest label and 9 biggest.
     
 
     x_val_all = np.concatenate([x_val1, x_val2])

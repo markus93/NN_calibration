@@ -38,7 +38,7 @@ def color_preprocessing(x_train, x_val, x_test):
     x_val = (x_val - mean) / std
     x_test = (x_test - mean) / std
     
-    return x_train, x_test
+    return x_train, x_val, x_test
     
 
 if __name__ == '__main__':
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     print(x_train.shape)
     print("Data loaded")
     
-    x_train, x_test = color_preprocessing(x_train, x_val, x_test)  # Per channel mean
+    x_train, x_val, x_test = color_preprocessing(x_train, x_val, x_test)  # Per channel mean
 
     
     # Try with ImageDataGenerator, otherwise it takes massive amount of memory
