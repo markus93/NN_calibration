@@ -67,7 +67,7 @@ if __name__ == "__main__":
     #   layer.trainable=False
 
     x = base_model.output
-    x = AveragePooling2D((7, 7), name='avg_pool')(x)
+    x = AveragePooling2D((7, 7), name='avg_pool2')(x)
     predictions = Dense(NR_CLASSES, activation='softmax', name='fc10')(x)
 
     model = Model(inputs=base_model.input, outputs=predictions)
