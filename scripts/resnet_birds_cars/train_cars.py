@@ -46,9 +46,7 @@ if __name__ == "__main__":
         x_train[:,:,:,i] -= MEAN[i]
         x_test[:,:,:,i] -= MEAN[i]
     
-    x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
-    
-    
+    x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)    
     
     # set data augmentation
     print('Using real-time data augmentation.')
@@ -60,15 +58,16 @@ if __name__ == "__main__":
     datagen.fit(x_train) 
     
     print("Load model")
-    base_model = keras.applications.resnet50.ResNet50(include_top=False)  # Load in pretrained model (ImageNet)
+    base_model = keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', 
+                                                      input_tensor=None, input_shape=(224,224,3), 
+                                                      pooling=None, classes=NR_CLASSES)
 
     # Atm all layers trainable -> Test with only base layers untrainable 
     #for layer in base_model.layers:
     #   layer.trainable=False
 
-    x = base_model.output
-    # and a logistic layer -- let's say we have 196 classes
-    x_fc = AveragePooling2D((7, 7), name='avg_pool')(x)
+    x_fc = base_model.output
+    #x_fc = AveragePooling2D((7, 7), name='avg_pool')(x)
     x_fc = Flatten()(x_fc)
     predictions = Dense(NR_CLASSES, activation='softmax')(x_fc)
 

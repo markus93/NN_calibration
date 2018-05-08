@@ -63,14 +63,16 @@ if __name__ == "__main__":
     
     print("Load model")
     
-    base_model = keras.applications.resnet50.ResNet50(include_top=False)  # Load in pretrained model (ImageNet)
+    base_model = keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', 
+                                                      input_tensor=None, input_shape=(224,224,3), 
+                                                      pooling=None, classes=NR_CLASSES)  # Load in pretrained model (ImageNet)
 
     # Atm all layers trainable -> Test with only base layers untrainable 
     #for layer in base_model.layers:
     #    layer.trainable=False
 
     x = base_model.output
-    x = GlobalAveragePooling2D()(x)
+    #x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
     #x = Dense(1024, activation='relu')(x)
     x = Flatten()(x)
