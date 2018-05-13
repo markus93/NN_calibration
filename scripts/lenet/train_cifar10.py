@@ -7,13 +7,14 @@ from keras.datasets import cifar10
 from keras.models import Sequential
 from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from keras.callbacks import LearningRateScheduler, TensorBoard
+from keras.layers.normalization import BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
 from sklearn.model_selection import train_test_split
 import pickle
 
 batch_size    = 128
-epochs        = 200
+epochs        = 300
 iterations    = 45000 // batch_size
 num_classes   = 10
 weight_decay  = 0.0001
@@ -32,7 +33,9 @@ def build_model(n=1, num_classes = 10):
     model = Sequential()
     model.add(Conv2D(n*6, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay), input_shape=(32,32,3)))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+    model.add(BatchNormalization(epsilon=1.1e-5))
     model.add(Conv2D(n*16, (5, 5), padding='valid', activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay)))
+    model.add(BatchNormalization(epsilon=1.1e-5))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
     model.add(Flatten())
     model.add(Dense(n*120, activation = 'relu', kernel_initializer='he_normal', kernel_regularizer=l2(weight_decay) ))
@@ -44,12 +47,12 @@ def build_model(n=1, num_classes = 10):
 
 def scheduler(epoch):
     if epoch <= 60:
-        return 0.05
+        return 0.1
     if epoch <= 120:
         return 0.01
     if epoch <= 160:    
-        return 0.002
-    return 0.0004
+        return 0.001
+    return 0.0001
     
 def color_preprocessing(x_train, x_val, x_test):
     
