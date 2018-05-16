@@ -50,7 +50,7 @@ if __name__ == "__main__":
     
     # set data augmentation
     print('Using real-time data augmentation.')
-    datagen = ImageDataGenerator(horizontal_flip=True,)
+    datagen = ImageDataGenerator(horizontal_flip=True)
     datagen.config['random_crop_size'] = SIZE_CROP
 
     datagen.set_pipeline([random_crop])
@@ -62,9 +62,9 @@ if __name__ == "__main__":
                                                       input_tensor=None, input_shape=(224,224,3), 
                                                       pooling=None, classes=NR_CLASSES)
 
-    # Atm all layers trainable -> Test with only base layers untrainable 
-    #for layer in base_model.layers:
-    #   layer.trainable=False
+    # Freeze the layers except the last convolutional block
+    for layer in base_model.layers[:-34]:
+        layer.trainable = False
 
     x_fc = base_model.output
     #x_fc = AveragePooling2D((7, 7), name='avg_pool')(x)
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     print(model.summary())
 
     
-    sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     early_stopping = EarlyStopping(patience=10)
