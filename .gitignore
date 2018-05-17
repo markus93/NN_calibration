@@ -100,9 +100,9 @@ ENV/
 # mypy
 .mypy_cache/
 data/
-models/
 *.jpg
 scripts/resnet_imgnet/test_img/
 *.p
 betacal_example/
 scripts/resnet_wide/old/
+models/temp_old_stuff/
