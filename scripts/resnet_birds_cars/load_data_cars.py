@@ -33,7 +33,7 @@ def load_img(path, new_size = 256):
     size = (int(round(im.size[0]*size_perc, 0)), int(round(im.size[1]*size_perc, 0))) # New size of the image
 
     im = im.resize(size, Image.ANTIALIAS)
-    rgb_im = im.convert('RGB')  # Some imageses are in Grayscale
+    rgb_im = im.convert('RGB')  # Some images are in Grayscale
     return np.array(rgb_im, dtype="float32")
 
 # Get center of image array

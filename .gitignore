@@ -106,3 +106,5 @@ betacal_example/
 scripts/resnet_wide/old/
 models/temp_old_stuff/
 reliability_diagrams/bin_info/
+reliability_diagrams/validation/ResNet-50_Birds_val.pdf
+reliability_diagrams/validation/
