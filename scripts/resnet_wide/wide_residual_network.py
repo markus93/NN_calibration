@@ -1,4 +1,5 @@
 # Code from https://github.com/titu1994/Wide-Residual-Networks/blob/master/wide_residual_network.py
+
 from keras.models import Model
 from keras.layers import Input, Add, Activation, Dropout, Flatten, Dense
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooling2D

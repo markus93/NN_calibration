@@ -1,3 +1,5 @@
+# Load in model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
+
 import os
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 import numpy as np

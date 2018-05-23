@@ -1,20 +1,18 @@
-# Code example from https://github.com/sebastianbk/finetuned-resnet50-keras/blob/master/resnet50_train.py
-
-import math, json, os, sys
+# Fine-tuning procedure for Stanford Cars using ResNet 50
 
 import keras
+import pickle
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import Dense
 from keras.models import Model
 from keras.optimizers import SGD
-from keras.preprocessing import image
-import pickle
 from sklearn.model_selection import train_test_split
 from load_data_cars import load_data_cars
 from image_gen_extended import ImageDataGenerator, random_crop
-from keras.layers import GlobalAveragePooling2D, Dense, Flatten, AveragePooling2D
+from keras.layers import Dense, Flatten
 from keras.models import Model
 
+# Constants
 SIZE_IMG = 256
 SIZE_CROP = (224, 224)
 BATCH_SIZE = 64
@@ -31,13 +29,13 @@ MEAN = [103.939, 116.779, 123.68]
 if __name__ == "__main__":
 
     print("Load data")
-    
     (x_train, y_train), (x_test, y_test) = load_data_cars(SIZE_IMG, SIZE_CROP)
     
     y_train = keras.utils.to_categorical(y_train, NR_CLASSES)
     y_test = keras.utils.to_categorical(y_test, NR_CLASSES)
     
     
+    # Normalize the data
     #  If you are freezing initial layers, you should use imagenet mean/std. (https://discuss.pytorch.org/t/confused-about-the-image-preprocessing-in-classification/3965)
     x_train = x_train[..., ::-1]
     x_test = x_test[..., ::-1]
@@ -46,17 +44,17 @@ if __name__ == "__main__":
         x_train[:,:,:,i] -= MEAN[i]
         x_test[:,:,:,i] -= MEAN[i]
     
+    #Split test set into 2
     x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)    
     
     # set data augmentation
     print('Using real-time data augmentation.')
     datagen = ImageDataGenerator(horizontal_flip=True)
     datagen.config['random_crop_size'] = SIZE_CROP
-
-    datagen.set_pipeline([random_crop])
-    # Add random crop for training
+    datagen.set_pipeline([random_crop])  # Add random crop for training
     datagen.fit(x_train) 
     
+    # Model loading and preparing for fine-tuning
     print("Load model")
     base_model = keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', 
                                                       input_tensor=None, input_shape=(224,224,3), 
@@ -67,17 +65,16 @@ if __name__ == "__main__":
         layer.trainable = False
 
     x_fc = base_model.output
-    #x_fc = AveragePooling2D((7, 7), name='avg_pool')(x)
     x_fc = Flatten()(x_fc)
     predictions = Dense(NR_CLASSES, activation='softmax')(x_fc)
 
     model = Model(inputs=base_model.input, outputs=predictions)
     print(model.summary())
 
-    
     sgd = SGD(lr=0.001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
+    # Model training
     early_stopping = EarlyStopping(patience=10)
     checkpointer = ModelCheckpoint('resnet50_cars_best.h5', verbose=1, save_best_only=True)
     cbks = [early_stopping, checkpointer]

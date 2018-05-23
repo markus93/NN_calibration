@@ -1,3 +1,5 @@
+# Training procedure for CIFAR-10 using ResNet 110 (SD)
+
 import numpy as np
 import collections
 import pickle

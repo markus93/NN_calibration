@@ -8,7 +8,8 @@ import keras
     
 def evaluate_model(model, weights_file, x_test, y_test, bins = 15, verbose = True, pickle_file = None, x_val = None, y_val = None):
     """
-    Evaluates the model, in addition calculates the calibration errors
+    Evaluates the model, in addition calculates the calibration errors and 
+    saves the logits for later use, if "pickle_file" is not None.
     
     Parameters:
         model (keras.model): constructed model

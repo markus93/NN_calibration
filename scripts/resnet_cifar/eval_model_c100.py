@@ -1,4 +1,5 @@
-# Code from https://github.com/BIGBALLON/cifar-10-cnn/blob/master/4_Residual_Network/ResNet_keras.py
+# Load in model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
+# ResNet model from https://github.com/BIGBALLON/cifar-10-cnn/blob/master/4_Residual_Network/ResNet_keras.py
 
 import keras
 import numpy as np
@@ -125,7 +126,7 @@ if __name__ == '__main__':
     x_val = (x_val-img_mean)/img_std
     x_test = (x_test-img_mean)/img_std
     
-    # build network
+    # build network and evaluate
     img_input = Input(shape=(img_rows,img_cols,img_channels))
     output    = residual_network(img_input,num_classes100,stack_n)
     model2    = Model(img_input, output)    

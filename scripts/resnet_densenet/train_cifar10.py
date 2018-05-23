@@ -1,3 +1,5 @@
+# Training procedure for CIFAR-10 using DenseNet 40 with growth rate 12.
+
 from __future__ import print_function
 
 import os.path

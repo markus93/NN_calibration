@@ -1,18 +1,15 @@
-# Code example from https://github.com/sebastianbk/finetuned-resnet50-keras/blob/master/resnet50_train.py
-
-import math, json, os, sys
+# Fine-tuning procedure for Birds using ResNet 50
 
 import keras
+import pickle
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import Dense
 from keras.models import Model
 from keras.optimizers import SGD
-from keras.preprocessing import image
-import pickle
 from sklearn.model_selection import train_test_split
 from load_data_birds import load_data_birds
 from image_gen_extended import ImageDataGenerator, random_crop
-from keras.layers import GlobalAveragePooling2D, Dense, Flatten
+from keras.layers import Dense, Flatten, GlobalAveragePooling2D
 from keras.models import Model
 
 SIZE_IMG = 256
@@ -52,37 +49,27 @@ if __name__ == "__main__":
     x_test50, x_val, y_test50, y_val = train_test_split(x_test, y_test, test_size=0.5, random_state=SEED)
     
     
-    # set data augmentation
+    #Data augmentation
     print('Using real-time data augmentation.')
-    datagen = ImageDataGenerator(horizontal_flip=True) #rotation_range = 0.1 # TODO try this
+    datagen = ImageDataGenerator(horizontal_flip=True)
     datagen.config['random_crop_size'] = SIZE_CROP
-
-    datagen.set_pipeline([random_crop])
-    # Add random crop for training
+    datagen.set_pipeline([random_crop])  # Add random crop for training
     datagen.fit(x_train) 
     
+    # Model loading and preparing for fine-tuning
     print("Load model")
-    
     base_model = keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', 
                                                       input_tensor=None, input_shape=(224,224,3), 
                                                       pooling=None, classes=NR_CLASSES)  # Load in pretrained model (ImageNet)
 
-    # Atm all layers trainable -> Test with only base layers untrainable 
-    #for layer in base_model.layers:
-    #    layer.trainable=False
-
     x = base_model.output
-    #x = GlobalAveragePooling2D()(x)
-    # let's add a fully-connected layer
-    #x = Dense(1024, activation='relu')(x)
-    x = Flatten()(x)
-    # and a logistic layer -- let's say we have 200 classes
+    x = GlobalAveragePooling2D()(x)  # Global AVG pool and extra Dense layer can be dropped. However given solution matches the weight file.
+    x = Dense(1024, activation='relu')(x)
     predictions = Dense(NR_CLASSES, activation='softmax')(x)
 
     model = Model(inputs=base_model.input, outputs=predictions)
     print(model.summary())
     
-    #Try with SGD
     sgd = SGD(lr=0.0001, decay = 1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -90,8 +77,7 @@ if __name__ == "__main__":
     checkpointer = ModelCheckpoint('resnet50_birds_best.h5', verbose=1, save_best_only=True)
     cbks = [early_stopping, checkpointer]
     
-    print(model.summary())
-
+    # Model training
     print("Start training")
     hist = model.fit_generator(datagen.flow(x_train, y_train, shuffle=True, batch_size=BATCH_SIZE),
                          steps_per_epoch=len(x_train) // BATCH_SIZE,

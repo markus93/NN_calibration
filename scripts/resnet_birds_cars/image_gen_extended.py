@@ -4,6 +4,7 @@ new process methods, etc...
 '''
 
 #Code from https://github.com/oeway/keras/blob/extendImageDataGenerator/keras/preprocessing/image.py
+# Used for Random Crop function currently
 
 #wfrom __future__ import absolute_import
 from __future__ import print_function

@@ -1,3 +1,5 @@
+#Code from https://github.com/aravindsiv/dan_qa
+
 from keras.layers import Layer
 from keras import backend as K
 import tensorflow as tf

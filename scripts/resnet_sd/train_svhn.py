@@ -1,3 +1,5 @@
+# Training procedure for SVHN using ResNet 152 (SD)
+
 import os
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 import numpy as np

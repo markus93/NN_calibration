@@ -1,3 +1,5 @@
+# Load in pre-trained model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
+
 from __future__ import print_function
 
 import os.path

@@ -1,3 +1,5 @@
+# Loads in weights and evaluates model (ECE, MCE, error rate) and saves logits.
+
 import keras
 import numpy as np
 from keras import optimizers
@@ -27,7 +29,6 @@ N = 1
 
 weights_file_10 = "../../models/lenet_5_c10.h5"
 weights_file_100 = "../../models/lenet_5_c100.h5"
-
 
 def build_model(n=1, num_classes = 10):
     """

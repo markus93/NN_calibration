@@ -1,3 +1,0 @@
- loss: 0.7707 - acc: 0.8703 - val_loss: 1.9830 - val_acc: 0.5760
-
-Paper: 24.91%

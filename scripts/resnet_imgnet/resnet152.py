@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Script from https://gist.github.com/mvoelk/ef4fc7fb905be7191cc2beb1421da37c
 
 import numpy as np

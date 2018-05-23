@@ -1,3 +1,5 @@
+# Load in model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
+
 import keras
 import numpy as np
 from keras.datasets import cifar10, cifar100

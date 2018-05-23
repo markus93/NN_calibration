@@ -1,3 +1,6 @@
+# Needed for some densenets (however not used atm)
+# Code from https://github.com/titu1994/DenseNet
+
 from __future__ import absolute_import
 
 from keras import backend as K_BACKEND

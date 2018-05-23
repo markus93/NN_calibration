@@ -1,3 +1,5 @@
+# Load in model weights and evaluate its goodness (ECE, MCE, error) also saves logits
+
 import keras
 import numpy as np
 from keras.datasets import cifar10, cifar100
@@ -19,6 +21,8 @@ from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
 from utility.calibration import evaluate_model
 
+
+# Constants
 depth              = 34  # 32, if ignoring conv layers carrying residuals, which are needed for increasing filter size.
 growth_rate        = 10  # Growth factor
 n                  = (depth-4)//6
@@ -30,7 +34,7 @@ epochs             = 200
 iterations         = 45000 // batch_size
 weight_decay       = 0.0005
 seed = 333
-weights_file_10 = "../../models/resnet_wide_28_10_c10.h5"
+weights_file_10 = "../../models/resnet_wide_28_10_c10.h5"  # Weight file path
 
     
 # Preprocessing based on the paper http://arxiv.org/abs/1605.07146

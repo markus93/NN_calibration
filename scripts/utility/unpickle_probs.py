@@ -1,3 +1,5 @@
+# Method for unpickling probabilities/logits saved in process of evaluation.
+
 import pickle
 
 # Example of unpickle

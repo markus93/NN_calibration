@@ -1,3 +1,5 @@
+# Load in model weights and evaluate its goodness (ECE, MCE, error) also saves logits
+
 import numpy as np
 import collections
 import pickle

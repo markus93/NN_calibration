@@ -1,3 +1,4 @@
+# Training procedure for WideNet 32-10 for CIFAR-100.
 import keras
 import numpy as np
 from keras.datasets import cifar100

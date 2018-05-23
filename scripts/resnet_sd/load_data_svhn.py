@@ -1,14 +1,10 @@
-# coding: utf-8
-
-# # Loading Data - SVHN - followed paper (https://arxiv.org/pdf/1603.09382.pdf)
+# Loading Data - SVHN - followed paper (https://arxiv.org/pdf/1603.09382.pdf)
 
 # Imports
 import numpy as np
 import scipy.io
 from sklearn.model_selection import train_test_split
 
-
-# Split validation data ()
 
 # Split train data into train and validation gettting certain number of labels from each class
 def train_val_split_count(x_train, y_train, size, seed):
@@ -85,7 +81,7 @@ def load_data_svhn(seed = None):
     y_train_all = np.concatenate([y_train1, y_extra2])
     
     y_train_all -= 1  # So 0 would be smallest label and 9 biggest.
-    
+    #NB! Note that this way the labels are not actually correct, because 10 indicates the 0, FIX this.
 
     x_val_all = np.concatenate([x_val1, x_val2])
     y_val_all = np.concatenate([y_val1, y_val2])

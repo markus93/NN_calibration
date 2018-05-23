@@ -1,14 +1,10 @@
-# Code example from https://github.com/sebastianbk/finetuned-resnet50-keras/blob/master/resnet50_train.py
-
-import math, json, os, sys
+# Load in pre-trained model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
 
 import keras
-from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import Dense
+import pickle
+
 from keras.models import Model
 from keras.optimizers import SGD
-from keras.preprocessing import image
-import pickle
 from sklearn.model_selection import train_test_split
 from load_data_birds import load_data_birds
 from keras.layers import GlobalAveragePooling2D, Dense
@@ -40,7 +36,6 @@ MEAN = [103.939, 116.779, 123.68]
 if __name__ == "__main__":
 
     print("Load data")
-    
     (x_train, y_train), (x_test, y_test) = load_data_birds(SIZE_IMG, SIZE_CROP)
     
     y_train = keras.utils.to_categorical(y_train, NR_CLASSES)

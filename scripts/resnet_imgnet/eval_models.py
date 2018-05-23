@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# Load in pre-trained model weights and evaluate its goodness (ECE, MCE, error) also saves logits.
+
 
 import numpy as np
    
@@ -14,7 +15,7 @@ from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
 from utility.calibration import evaluate_model
 
-# Constants
+# Constants, predifined means for image net
 MEAN = [103.939, 116.779, 123.68]
 
 if __name__ == '__main__':

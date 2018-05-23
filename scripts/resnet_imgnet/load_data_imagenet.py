@@ -4,7 +4,7 @@ from os.path import isfile, join
 from PIL import Image
 from sklearn.model_selection import train_test_split
 
-# Paths to files
+# Paths to files, change the path if needed
 LABELS_PATH = '../../data/data_imagenet/labels.txt'
 DATA_PATH = '../../data/data_imagenet/val/'
 IMG_MEAN = [103.939, 116.779, 123.68]  # Mean to subtract from image, used it later, in training script
