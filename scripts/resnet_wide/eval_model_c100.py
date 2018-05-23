@@ -19,7 +19,7 @@ import pickle
 import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
-from utility.calibration import evaluate_model
+from utility.evaluation import evaluate_model
 
 depth              = 34  # 32, if ignoring conv layers carrying residuals, which are needed for increasing filter size.
 growth_rate        = 10  # Growth factor

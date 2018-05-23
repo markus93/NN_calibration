@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
-from utility.calibration import evaluate_model
+from utility.evaluation import evaluate_model
 
 batch_size = 64
 nb_classes10 = 10

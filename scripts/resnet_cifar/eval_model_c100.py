@@ -17,7 +17,7 @@ import pickle
 import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
-from utility.calibration import evaluate_model
+from utility.evaluation import evaluate_model
 
 stack_n            = 18            
 num_classes10      = 10

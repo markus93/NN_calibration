@@ -13,7 +13,7 @@ import keras
 import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath("utility") ) ) )
-from utility.calibration import evaluate_model
+from utility.evaluation import evaluate_model
 
 # Constants, predifined means for image net
 MEAN = [103.939, 116.779, 123.68]
