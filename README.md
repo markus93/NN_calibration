@@ -4,7 +4,7 @@ This repository contains all scripts needed to train neural networks (ResNet, De
 
 ## Structure
 Structure of the repository:
-- [Logits](logits) - pickled files with logits for the trained models.
+- [Logits](logits) - pickled files with logits for the trained models. Additionally logits can be downloaded from Google Drive https://drive.google.com/drive/folders/1e1ai-bKb7LukKShqpn3S_gYXJGzhUYgm?usp=sharing.
 - [Models](models) - model weights of the trained models.
 - [Reliability diagrams](reliability_diagrams) - reliability diagrams generated for the models.
 - [Scripts](scripts) - Python code and notebooks used to train the models, evaluate the outcome and calibrate the probabilities of the models (Python 3.6.4, Keras 2.1.4, Tensorflow 1.4.1)
