@@ -19,10 +19,17 @@ Outputs:
 
 logits - instead of probabilities, there are just network outputs without softmaxing. Use softmax function to get actual probabilities.
 
+ADDITIONAL SOURCE:
+
+Additionally, there is also an alternative way of downloading the logits from Google Drive https://drive.google.com/drive/folders/1e1ai-bKb7LukKShqpn3S_gYXJGzhUYgm?usp=sharing. 
+
 PAPERS:
 
-ResNet - https://arxiv.org/pdf/1512.03385.pdf (Deep Residual Learning for Image Recognition)
-DenseNet - https://arxiv.org/pdf/1608.06993.pdf (Densely Connected Convolutional Networks)
-Wide ResNet - https://arxiv.org/pdf/1605.07146.pdf (Wide Residual Networks)
+ResNet - https://arxiv.org/pdf/1512.03385.pdf (Deep Residual Learning for Image Recognition
+)
+DenseNet - https://arxiv.org/pdf/1608.06993.pdf (Densely Connected Convolutional Networks)
+
+Wide ResNet - https://arxiv.org/pdf/1605.07146.pdf (Wide Residual Networks
+)
 LeNet - http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf (Gradient-Based Learning Applied to Document Recognition)
 ResNet SD -https://arxiv.org/pdf/1603.09382.pdf (Deep Networks with Stochastic Depth)
