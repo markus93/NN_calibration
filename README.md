@@ -37,5 +37,19 @@ decision trees and naive bayesian classifiers"](https://dl.acm.org/citation.cfm?
 - Temperature Scaling - based on paper ["On Calibration of Modern Neural Networks"](https://arxiv.org/abs/1706.04599)
 - Beta Calibration - based on paper ["Beta calibration: a well-founded and easily implemented improvement on logistic calibration for binary classifiers"](http://proceedings.mlr.press/v54/kull17a.html)
 
+
+## Citation
+
+If you find the work relevant to your research, please cite:
+
+```
+@article{kull2019beyond,
+  title={Beyond temperature scaling: Obtaining well-calibrated multiclass probabilities with Dirichlet calibration},
+  author={Kull, Meelis and Perello-Nieto, Miquel and K{\"a}ngsepp, Markus and Song, Hao and Flach, Peter and others},
+  journal={arXiv preprint arXiv:1910.12656},
+  year={2019}
+}
+```
+
 ## Author
 	Markus Kängsepp, University of Tartu
